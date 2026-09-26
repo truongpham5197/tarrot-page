@@ -260,7 +260,9 @@ export default function Home() {
         <div className="container footer-grid">
           <div className="footer-brand"><div className="brand"><span className="brand-symbol"><Sparkles size={18} /></span><span className="brand-copy"><strong>Lumiere</strong><small>Tựa sáng điều bên trong</small></span></div><p>Tarot · Chiêm tinh · Thần số · Matrix Destiny · Solar Return</p></div>
           <nav><strong>Khám phá</strong><a href="#trang-chu">Trang chủ</a><a href="#dich-vu">Dịch vụ</a><a href="#ve-minh">Về mình</a><a href="#cam-nhan">Cảm nhận khách hàng</a><a href="#faq">FAQ</a><a href="/game.html">Trò chơi miễn phí ✦</a></nav>
+          {/* Tạm ẩn thông tin liên hệ — bỏ comment để bật lại
           <nav><strong>Kết nối</strong><a href="https://zalo.me/0328052889" target="_blank" rel="noreferrer">Zalo · 0328 052 889</a><a href="https://www.facebook.com/misocduabeonhuheo" target="_blank" rel="noreferrer">Facebook</a><a href="tel:0328052889">Gọi điện</a></nav>
+          */}
           <div className="footer-note"><ShieldCheck /><p>Nội dung mang tính tham khảo, chiêm nghiệm; không thay thế tư vấn y tế, pháp lý hoặc tài chính.</p></div>
           <div className="footer-bottom"><span>© 2026 Lumiere. All rights reserved.</span><span>Online · Offline · PDF</span></div>
         </div>

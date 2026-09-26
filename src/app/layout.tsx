@@ -49,11 +49,9 @@ const structuredData = {
   "@type": "ProfessionalService",
   name: "Lumiere Tarot & Chiêm Tinh",
   url: siteUrl,
-  telephone: "+84328052889",
   description: "Dịch vụ tư vấn Tarot, Chiêm tinh, Thần số học, Matrix Destiny và Solar Return theo hình thức online hoặc offline.",
   areaServed: ["Việt Nam", "Thành phố Hồ Chí Minh"],
   priceRange: "Liên hệ",
-  sameAs: ["https://www.facebook.com/misocduabeonhuheo", "https://zalo.me/0328052889"],
   serviceType: ["Tarot", "Chiêm tinh học", "Thần số học", "Matrix Destiny Chart", "Solar Return Chart"],
 };
 
