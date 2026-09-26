@@ -33,7 +33,8 @@ setTimeout(() => Narrator.say(heroSay, greetingByHour()), 500);
     el.classList.toggle("flipped", flipped);
     if (flipped) {
       name.innerHTML = `${card.vi} <small>(${card.name})${reversed ? " — ngược" : ""}</small>`;
-      Narrator.say(meaning, reversed ? card.rev : card.up, 12);
+      const d = cardDetail(card, reversed);
+      Narrator.say(meaning, `${d.g} <b>Thông điệp vũ trụ:</b> ${CARD_MSG[card.id][reversed ? 1 : 0]} <b>Lời khuyên hôm nay:</b> ${d.adv}`, 12);
       SFX.play("flip");
       setTimeout(() => fxFlip(el, card), 260);
     } else {
@@ -185,6 +186,165 @@ function spreadSummary() {
   return { chips, notes };
 }
 
+// ---- Tự học: phản hồi 👍/👎 + từ khoá chủ đề người dùng dạy (localStorage) ----
+const FEEDBACK_KEY = "tarot-feedback";
+const LEARN_KEY = "tarot-learn-topics";
+const store = {
+  get(k, dflt) { try { return JSON.parse(localStorage.getItem(k)) ?? dflt; } catch { return dflt; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* chế độ riêng tư */ } }
+};
+Object.assign(LEARNED_TOPIC_WORDS, store.get(LEARN_KEY, {}));
+
+// Hồ sơ văn phong rút ra từ 20 phản hồi gần nhất (cũ tự phai dần)
+function learnProfile() {
+  const fb = store.get(FEEDBACK_KEY, { events: [], liked: [] });
+  const cnt = r => fb.events.filter(e => e.r === r).length;
+  const long = cnt("long") - cnt("short");
+  return {
+    length: long >= 2 ? "short" : long <= -2 ? "long" : "normal",
+    directness: cnt("offtopic") >= 1 ? "high" : "normal",
+    specificity: cnt("generic") >= 1 ? "high" : "normal",
+    liked: fb.liked.slice(0, 3),
+    disliked: [cnt("long") >= 2 && "lan man, dài dòng", cnt("generic") >= 2 && "câu sáo rỗng áp dụng cho ai cũng được", cnt("offtopic") >= 2 && "lạc đề"].filter(Boolean)
+  };
+}
+function recordFeedback(v, r, text) {
+  const fb = store.get(FEEDBACK_KEY, { events: [], liked: [] });
+  fb.events = [{ v, r, ts: Date.now() }, ...fb.events].slice(0, 20);
+  if (v === "up" && text) fb.liked = [text.slice(0, 200), ...fb.liked].slice(0, 3);
+  store.set(FEEDBACK_KEY, fb);
+}
+// Người dùng sửa chủ đề → nhớ các từ trong câu hỏi chưa thuộc chủ đề nào
+const STOP_WORDS = new Set("tôi mình em anh chị tớ có không nên sẽ được là và của cho với này đó thì mà khi nào bao giờ sao tại vì làm gì như thế nào hay hoặc người ấy nó họ ta rồi chưa đã đang một những các lại ra vào bị".split(" "));
+function learnTopic(q, topic) {
+  const learned = store.get(LEARN_KEY, {});
+  for (const w of q.normalize("NFC").toLowerCase().split(/[^\p{L}]+/u)) {
+    if (w.length < 2 || STOP_WORDS.has(w)) continue;
+    if (topic === "general") delete learned[w]; else learned[w] = topic;
+  }
+  const keys = Object.keys(learned);
+  keys.slice(0, Math.max(0, keys.length - 300)).forEach(k => delete learned[k]);
+  store.set(LEARN_KEY, learned);
+  for (const k in LEARNED_TOPIC_WORDS) delete LEARNED_TOPIC_WORDS[k];
+  Object.assign(LEARNED_TOPIC_WORDS, learned);
+}
+
+let lastReading = null;   // cho sổ tay: {topic, score, qtype, verdict}
+let conclToken = 0;       // bỏ kết quả AI về trễ của lượt trải cũ
+const fmtAI = s => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+
+function renderConclusion(el, q, topicOverride) {
+  const token = ++conclToken;
+  const positions = POSITIONS[spreadSize];
+  const info = buildConclusion(
+    chosen.map(({ entry }, i) => ({ card: entry.card, reversed: entry.reversed, pos: positions[i] })), q, topicOverride);
+  const profile = learnProfile();
+  const history = getJournal();
+  const deep = deepConclusion(info, q, { history, profile });
+  lastReading = { topic: info.topic, score: +info.score.toFixed(2), qtype: deep.qtype, verdict: info.verdict.title };
+
+  el.innerHTML = `<div class="g-icon">${ICON("sparkle")}</div>
+    <div><div class="result-pos">Kết luận</div>
+    <div class="verdict ${info.verdict.cls} verdict-inline">${info.verdict.title}</div>
+    ${info.parts.map(p => `<p class="meaning">${p}</p>`).join("")}
+    <div class="final-concl">
+      <div class="final-head"><span>${ICON("sparkle")} Kết luận cuối cùng</span><span class="final-src"></span></div>
+      <div class="final-body read-long meaning">${deep.paras.map(p => `<p>${p}</p>`).join("")}</div>
+    </div>
+    <div class="fb-row">
+      <span class="fb-q">Kết luận này có đúng ý bạn?</span>
+      <button class="btn btn-ghost btn-sm" data-fb="up" aria-label="Hữu ích">👍</button>
+      <button class="btn btn-ghost btn-sm" data-fb="down" aria-label="Chưa ổn">👎</button>
+    </div>
+    <div class="fb-more" hidden></div></div>`;
+
+  const src = el.querySelector(".final-src");
+  const body = el.querySelector(".final-body");
+  let aiText = "";
+
+  // Gọi AI khi có câu hỏi; lỗi/không có key → giữ nguyên bản cục bộ
+  if (q) {
+    const cacheKey = "ai:" + hashStr(q + info.topic + chosen.map(c => c.entry.card.id + (c.entry.reversed ? "r" : "")).join(","));
+    let cached = null;
+    try { cached = JSON.parse(sessionStorage.getItem(cacheKey)); } catch { /* bỏ qua */ }
+    const show = r => {
+      if (token !== conclToken) return;
+      aiText = r.answer;
+      body.innerHTML = `<p class="final-answer">${fmtAI(r.answer)}</p>` +
+        r.paragraphs.map(p => `<p>${fmtAI(p)}</p>`).join("") +
+        (r.steps.length ? `<p><b>Lộ trình:</b></p><ol class="final-steps">${r.steps.map(s => `<li>${fmtAI(s)}</li>`).join("")}</ol>` : "") +
+        (r.closing ? `<p><b>Chốt lại:</b> ${fmtAI(r.closing)}</p>` : "");
+      src.textContent = "✦ luận riêng cho câu hỏi của bạn";
+      src.className = "final-src ai";
+    };
+    if (cached) show(cached);
+    else {
+      src.textContent = "Cú Nguyệt đang suy ngẫm sâu hơn…";
+      src.className = "final-src loading";
+      const topicField = e => { const t = POSITION_TOPIC[e.pos]; return t && t !== "adv" ? t : info.topic === "general" ? "g" : info.topic; };
+      fetch("/api/tarot-reading", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: q, qtype: deep.qtype, topic: TOPIC_INFO[info.topic]?.label || "tổng quan",
+          verdict: info.verdict.title, score: info.score, profile,
+          cards: info.scored.map(e => ({
+            name: e.card.vi, reversed: e.reversed, pos: e.pos, keywords: e.d.kw.split(",").map(s => s.trim()),
+            general: e.d.g, focus: e.d[topicField(e)], advice: e.d.adv, score: e.d.score
+          })),
+          history: history.slice(0, 5).map(h => ({
+            q: h.q, cards: h.cards.join(", "), verdict: h.verdict || "",
+            ago: `${Math.max(0, Math.round((Date.now() - h.ts) / 86400000))} ngày trước`
+          }))
+        })
+      }).then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(r => {
+          if (!r || !r.answer || !Array.isArray(r.paragraphs)) throw 0;
+          r.steps = Array.isArray(r.steps) ? r.steps : [];
+          try { sessionStorage.setItem(cacheKey, JSON.stringify(r)); } catch { /* đầy bộ nhớ */ }
+          show(r);
+        })
+        .catch(() => { if (token === conclToken) { src.textContent = ""; src.className = "final-src"; } });
+    }
+  }
+
+  // Phản hồi → học
+  const more = el.querySelector(".fb-more");
+  const row = el.querySelector(".fb-row");
+  const thanks = msg => { row.innerHTML = `<span class="fb-q">${msg}</span>`; more.hidden = true; };
+  el.querySelector('[data-fb="up"]').addEventListener("click", () => {
+    recordFeedback("up", "", aiText);
+    SFX.play("page");
+    thanks("Cảm ơn bạn — Cú Nguyệt sẽ giữ giọng đọc này cho những lần sau. 🦉");
+  });
+  el.querySelector('[data-fb="down"]').addEventListener("click", () => {
+    more.hidden = false;
+    more.innerHTML = `<div class="fb-q">Điều gì chưa ổn?</div>
+      <div class="fb-chips">
+        <button class="chip" data-r="offtopic">Chưa trả lời đúng câu hỏi</button>
+        <button class="chip" data-r="generic">Chung chung quá</button>
+        <button class="chip" data-r="long">Dài quá</button>
+        <button class="chip" data-r="short">Ngắn quá</button>
+      </div>`;
+    more.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => {
+      const r = b.dataset.r;
+      recordFeedback("down", r);
+      if (r !== "offtopic" || !q) { thanks("Đã ghi nhận — lần sau kết luận sẽ được điều chỉnh theo ý bạn."); return; }
+      // Lạc đề: hỏi lại chủ đề thật, dạy từ khoá rồi luận lại ngay
+      more.innerHTML = `<div class="fb-q">Câu hỏi của bạn thực ra về chuyện gì?</div>
+        <div class="fb-chips">${[...Object.entries(TOPIC_INFO).map(([k, t]) => [k, t.label]), ["general", "Tổng quát"]]
+          .map(([k, l]) => `<button class="chip" data-t="${k}">${l}</button>`).join("")}</div>`;
+      more.querySelectorAll("[data-t]").forEach(t => t.addEventListener("click", () => {
+        learnTopic(q, t.dataset.t);
+        SFX.play("flip");
+        renderConclusion(el, q, t.dataset.t);
+        toast("Đã học — những câu hỏi tương tự sẽ được hiểu đúng hơn.");
+      }));
+    }));
+  });
+  return info;
+}
+
 function renderReading() {
   const q = document.getElementById("questionInput").value.trim();
   const positions = POSITIONS[spreadSize];
@@ -198,21 +358,33 @@ function renderReading() {
       <div class="meaning">“${esc(q)}”</div></div>`;
     readingResult.appendChild(qEl);
   }
+  const topic = detectTopic(q);
   chosen.forEach(({ entry }, i) => {
     const { card, reversed } = entry;
+    const pos = positions[i];
+    const posTopic = POSITION_TOPIC[pos];
+    // Luận giải dài: trải 5 lá đọc theo mảng của vị trí, còn lại theo chủ đề câu hỏi
+    const paras = longReading(card, reversed, posTopic || topic, pos);
     const div = document.createElement("div");
     div.className = "result-card";
     div.style.animationDelay = `${i * 0.12}s`;
     div.innerHTML = `
       ${cardThumb(card, reversed)}
       <div>
-        <div class="result-pos">${positions[i]}</div>
+        <div class="result-pos">${pos}</div>
         <h4>${card.vi} <small>· ${card.name}</small>${reversed ? '<span class="rev-tag">NGƯỢC</span>' : ""}</h4>
         <div class="result-keywords">${card.keywords.join(" · ")}</div>
-        <div class="meaning">${reversed ? card.rev : card.up}</div>
+        ${POSITION_HINT[pos] ? `<div class="pos-hint">${POSITION_HINT[pos]}</div>` : ""}
+        <div class="read-long meaning">${paras.map(p => `<p>${p}</p>`).join("")}</div>
       </div>`;
     readingResult.appendChild(div);
   });
+
+  // Kết luận: tổng quan + kết luận cuối cùng (cục bộ trước, AI thay vào khi về)
+  const concl = document.createElement("div");
+  concl.className = "result-card conclusion";
+  readingResult.appendChild(concl);
+  const verdictInfo = renderConclusion(concl, q);
 
   const shareEl = document.createElement("div");
   shareEl.className = "result-card";
@@ -223,7 +395,7 @@ function renderReading() {
       <button class="btn btn-ghost btn-sm" id="shareReading">${ICON("share")}Gửi kết quả cho bạn bè</button>
     </div></div>`;
   readingResult.appendChild(shareEl);
-  Narrator.say(tableSay, notes[0] || "Bài đã nói xong. Đọc chậm từng lá nhé.");
+  Narrator.say(tableSay, `Kết luận: <b>${verdictInfo.verdict.title}</b>. Đọc chậm từng lá, rồi xem phần kết luận nhé.`);
   shareEl.querySelector("#shareReading").addEventListener("click", async () => {
     const names = chosen.map((c, i) => `• ${positions[i]}: ${c.entry.card.vi}${c.entry.reversed ? " (ngược)" : ""}`);
     const text = `Mình vừa trải ${spreadSize} lá ở Tiệm Tarot Đêm Khuya${q ? ` — “${q}”` : ""}:\n` +
@@ -256,14 +428,14 @@ function saveJournal() {
   const entries = getJournal();
   const q = document.getElementById("questionInput").value.trim();
   entries.unshift({
-    ts: Date.now(), q, spread: spreadSize,
+    ts: Date.now(), q, spread: spreadSize, ...lastReading,
     cards: chosen.map(c => c.entry.card.vi + (c.entry.reversed ? " (ngược)" : ""))
   });
-  localStorage.setItem(JOURNAL_KEY, JSON.stringify(entries.slice(0, 8)));
+  store.set(JOURNAL_KEY, entries.slice(0, 20));
   renderJournal();
 }
 function renderJournal() {
-  const entries = getJournal();
+  const entries = getJournal().slice(0, 8);
   journalBox.hidden = entries.length === 0;
   journalList.innerHTML = entries.map(e => {
     const d = new Date(e.ts);
@@ -283,12 +455,13 @@ document.getElementById("clearJournal").addEventListener("click", () => {
 renderJournal();
 
 // ---- Hỏi nhanh Có / Không ----
-const NEUTRAL_IDS = new Set([0, 2, 10, 12, 14, 18]); // Ngố, Nữ Tư Tế, Vòng Xoay, Người Treo, Tiết Chế, Mặt Trăng
 document.getElementById("yesnoBtn").addEventListener("click", () => {
   const q = document.getElementById("yesnoInput").value.trim();
   const card = TAROT_DECK[Math.floor(Math.random() * TAROT_DECK.length)];
   const reversed = Math.random() < 0.3;
-  const verdict = NEUTRAL_IDS.has(card.id) ? "half" : (reversed ? "no" : "yes");
+  const d = cardDetail(card, reversed);
+  const verdict = d.score >= 1 ? "yes" : d.score <= -1 ? "no" : "half";
+  const topic = detectTopic(q);
   const verdictText = {
     yes: "CÓ — cứ mạnh dạn!",
     no: "CHƯA — chưa phải lúc",
@@ -304,7 +477,12 @@ document.getElementById("yesnoBtn").addEventListener("click", () => {
       ${cardThumb(card, reversed)}
       <div>
         <b>${card.vi}</b> <small>(${card.name})${reversed ? " — ngược" : ""}</small>
-        <div class="meaning">${reversed ? card.rev : card.up}</div>
+        <div class="read-long meaning">${longReading(card, reversed, topic).map(p => `<p>${p}</p>`).join("")}</div>
+        <div class="meaning"><b>Kết luận:</b> ${{
+          yes: "Lá bài ủng hộ bạn — cứ tiến hành, nhưng làm cho chắc tay.",
+          no: "Lá bài chưa ủng hộ ở thời điểm này — lùi lại, chuẩn bị thêm rồi hỏi lại sau.",
+          half: "Kết quả chưa ngã ngũ — nó phụ thuộc vào cách bạn hành động."
+        }[verdict]}</div>
       </div>
     </div>`;
   box.hidden = false;
