@@ -2,6 +2,7 @@
 
 makeStars();
 initSoundToggle();
+setTimeout(() => document.getElementById("owlSay").textContent || owlSay("Ngày sinh của bạn giấu 9 điểm năng lượng, mỗi điểm ứng với một lá Ẩn Chính. Nhập vào đi, rồi chạm từng điểm để ta kể nghĩa."), 400);
 
 (function prefill() {
   const p = Profile.get();
@@ -32,7 +33,7 @@ const LINES = [
 document.getElementById("matrixBtn").addEventListener("click", () => {
   const name = document.getElementById("nameInput").value.trim() || "Bạn";
   const dob = document.getElementById("dobInput").value;
-  if (!dob) { toast("Cho mình xin ngày sinh đã!"); return; }
+  if (!dob) { owlSay("Không có ngày sinh thì ma trận trống trơn — nhập giúp ta nhé!"); toast("Cho mình xin ngày sinh đã!"); return; }
 
   const [y, m, d] = dob.split("-").map(Number);
   Profile.set({ ...Profile.get(), name, dob });
@@ -74,11 +75,12 @@ document.getElementById("matrixBtn").addEventListener("click", () => {
 
     detail.innerHTML = `
       <div class="m-detail-card">
+        ${cardThumb(card, false)}
         <div class="result-pos">${pos.label} · Năng lượng ${n}</div>
-        <h4>${card.icon} ${card.vi} <small>(${card.name})</small></h4>
-        <div class="m-hint">📍 ${pos.hint}</div>
+        <h4>${card.vi} <small>(${card.name})</small></h4>
+        <div class="m-hint">${ICON("compass")} ${pos.hint}</div>
         <div class="meaning">Con số ${n} mang ${DESTINY22[n - 1]}. Với ${esc(name)}, ở vị trí <b>${pos.label.toLowerCase()}</b>, năng lượng này tỏ rõ nhất — ${card.up}</div>
-        <div class="num-calc">🔍 ${calcDesc(key, { d, m, y, A, B, C, D, E })}</div>
+        <div class="num-calc">${calcDesc(key, { d, m, y, A, B, C, D, E })}</div>
       </div>`;
     SFX.play("pick");
     burstAt(chart.querySelector(`.m-node[data-key="${key}"]`), 8);
@@ -107,6 +109,7 @@ document.getElementById("matrixBtn").addEventListener("click", () => {
 
   const box = document.getElementById("matrixResult");
   box.hidden = false;
+  owlSay(`Trung tâm ma trận của bạn là năng lượng <b>${E}</b> — lá <b>${MAJOR_DECK[E - 1].vi}</b>. Chạm vào từng vòng tròn, ta kể tiếp cho nghe.`);
   SFX.play("reveal");
   box.scrollIntoView({ behavior: "smooth", block: "center" });
   showNode("E"); // mở sẵn điểm lõi

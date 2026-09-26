@@ -2,6 +2,7 @@
 
 makeStars();
 initSoundToggle();
+setTimeout(() => document.getElementById("owlSay").textContent || owlSay("Mỗi năm, Mặt Trời quay về đúng chỗ nó đứng khi bạn chào đời. Cho ta ngày sinh — ta xem năm tuổi mới của bạn mang màu gì."), 400);
 
 (function prefill() {
   const p = Profile.get();
@@ -12,7 +13,7 @@ initSoundToggle();
 document.getElementById("solarBtn").addEventListener("click", () => {
   const name = document.getElementById("nameInput").value.trim() || "Bạn";
   const dob = document.getElementById("dobInput").value;
-  if (!dob) { toast("Cho mình xin ngày sinh đã!"); return; }
+  if (!dob) { owlSay("Ta cần ngày sinh để biết khi nào Mặt Trời về nhà đấy!"); toast("Cho mình xin ngày sinh đã!"); return; }
 
   const [by, bm, bd] = dob.split("-").map(Number);
   Profile.set({ ...Profile.get(), name, dob });
@@ -39,22 +40,22 @@ document.getElementById("solarBtn").addEventListener("click", () => {
 
   const html = `
     <div class="result-card">
-      <div class="result-icon">🎂</div>
+      <div class="result-icon">${ICON("candle")}</div>
       <div>
         <div class="result-pos">Đếm ngược</div>
-        <h4>${isToday ? "Hôm nay là sinh nhật bạn — Happy Birthday! 🎉" : `Còn ${daysLeft} ngày nữa là tuổi ${ageAtNext}`}</h4>
+        <h4>${isToday ? "Hôm nay là sinh nhật bạn — chúc mừng sinh nhật!" : `Còn ${daysLeft} ngày nữa là tuổi ${ageAtNext}`}</h4>
         <div class="meaning">Solar Return gần nhất của ${esc(name)}: <b>${bd}/${bm}/${lastBDayYear}</b> — năm này chạy đến ${bd}/${bm}/${nextBday.getFullYear()}.</div>
       </div>
     </div>
 
     <div class="solar-grid">
       <div class="num-card ${[11, 22].includes(py) ? "master" : ""}">
-        <div class="num-badge">📅 ${py}</div>
+        <div class="num-badge">${py}</div>
         <div class="num-body">
           <div class="result-pos">Năm cá nhân ${py}${[11, 22].includes(py) ? ' <small class="approx">MASTER</small>' : ""}</div>
           <h4>${NUM_MEANINGS[py].name}</h4>
           <div class="meaning">${theme}</div>
-          <div class="num-calc">🔍 Ngày+tháng sinh (${reduceNum(bd + bm)}) + năm solar return ${lastBDayYear} (${reduceNum(lastBDayYear)}) → ${py}</div>
+          <div class="num-calc">Ngày+tháng sinh (${reduceNum(bd + bm)}) + năm solar return ${lastBDayYear} (${reduceNum(lastBDayYear)}) → ${py}</div>
         </div>
       </div>
 
@@ -74,17 +75,18 @@ document.getElementById("solarBtn").addEventListener("click", () => {
     </div>
 
     <div class="result-card">
-      <div class="result-icon">${sun.icon}</div>
+      <div class="result-icon big-icon">${sun.icon}</div>
       <div>
         <div class="result-pos">Điểm Mặt trời về nhà</div>
         <div class="meaning">Mặt trời trở lại đúng vị trí <b>${sun.vi}</b> khi bạn chào đời — ${SIGN_ESSENCE[ZODIAC_SIGNS.indexOf(sun)]}.</div>
-        <button class="btn btn-ghost btn-sm" id="shareSolar">📤 Chia sẻ</button>
+        <button class="btn btn-ghost btn-sm" id="shareSolar">${ICON("share")}Chia sẻ</button>
       </div>
     </div>`;
 
   const box = document.getElementById("solarResult");
   box.innerHTML = html;
   box.hidden = false;
+  owlSay(isToday ? `Chúc mừng sinh nhật! Năm cá nhân số <b>${py}</b> vừa mở cửa — lá chủ đề của bạn là <b>${card.vi}</b>.` : `Còn <b>${daysLeft}</b> ngày nữa là Mặt Trời về nhà. Năm này của bạn mang số <b>${py}</b>, lá chủ đề là <b>${card.vi}</b>.`);
   SFX.play(isToday ? "reveal" : "sparkle");
   burstAt(box.querySelector(".tarot-card"), 16);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });

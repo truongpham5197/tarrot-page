@@ -2,6 +2,7 @@
 
 makeStars();
 initSoundToggle();
+setTimeout(() => document.getElementById("owlSay").textContent || owlSay("Chào lữ khách! Cho ta xin ngày sinh — có giờ sinh thì càng tốt — ta sẽ dò xem Mặt Trời, Mặt Trăng và Cung Mọc của bạn đang đứng ở đâu trên bầu trời."), 400);
 
 const hourSel = document.getElementById("hourInput");
 for (let h = 0; h < 24; h++) {
@@ -20,12 +21,12 @@ for (let h = 0; h < 24; h++) {
 })();
 
 const PLACEMENT_INFO = [
-  { icon: "☀️", key: "sun",   role: "Cung Mặt trời", what: "Con người bạn thể hiện ra — bản sắc & cái tôi" },
-  { icon: "🌙", key: "moon",  role: "Cung Mặt trăng", what: "Thế giới cảm xúc bên trong — bạn khi không có ai nhìn" },
-  { icon: "⬆️", key: "asc",   role: "Cung mọc", what: "Ấn tượng đầu tiên — 'vỏ ngoài' người khác gặp trước tiên" }
+  { icon: ICON("sun"), key: "sun",   role: "Cung Mặt trời", what: "Con người bạn thể hiện ra — bản sắc & cái tôi" },
+  { icon: ICON("moon"), key: "moon",  role: "Cung Mặt trăng", what: "Thế giới cảm xúc bên trong — bạn khi không có ai nhìn" },
+  { icon: ICON("compass"), key: "asc",   role: "Cung mọc", what: "Ấn tượng đầu tiên — 'vỏ ngoài' người khác gặp trước tiên" }
 ];
 
-const ELEMENT_ICON = { "Lửa": "🔥", "Đất": "🌱", "Khí": "💨", "Nước": "💧" };
+const ELEMENT_ICON = { "Lửa": ICON("fire"), "Đất": ICON("earth"), "Khí": ICON("air"), "Nước": ICON("water") };
 
 function drawWheel(sunIdx, moonIdx, ascIdx) {
   const C = 160, R_OUT = 148, R_IN = 112, R_TXT = 130;
@@ -67,7 +68,7 @@ document.getElementById("drawBtn").addEventListener("click", () => {
   const dob = document.getElementById("dobInput").value;
   const hour = parseInt(hourSel.value, 10);
 
-  if (!dob) { toast("Vũ trụ cần ngày sinh để vẽ bản đồ!"); return; }
+  if (!dob) { owlSay("Ơ kìa, thiếu ngày sinh thì ta biết dò sao ở chỗ nào bây giờ?"); toast("Vũ trụ cần ngày sinh để vẽ bản đồ!"); return; }
   const d = new Date(dob + "T12:00:00");
   const day = d.getDate(), month = d.getMonth() + 1;
 
@@ -97,14 +98,14 @@ document.getElementById("drawBtn").addEventListener("click", () => {
 
   const html = `
     <div class="astro-head">
-      <h3>🌌 Bản đồ sao của ${esc(name)}</h3>
+      <h3>${ICON("orbit")} Bản đồ sao của ${esc(name)}</h3>
       <div class="astro-wheel-wrap">${drawWheel(sunIdx, moonIdx, ascIdx)}</div>
-      ${ascIdx < 0 ? '<p class="guide-note">🕵️ Giờ sinh bí ẩn — vũ trụ giữ kín cung mọc của bạn.</p>' : ""}
+      ${ascIdx < 0 ? '<p class="guide-note">Giờ sinh bí ẩn — vũ trụ giữ kín cung mọc của bạn.</p>' : ""}
     </div>
     <div class="big-three">
       ${placements.map(p => `
         <div class="big3-card">
-          <div class="big3-icon">${p.icon} ${p.sign.icon}</div>
+          <div class="big3-icon">${p.icon} <span class="z-icon">${p.sign.icon}</span></div>
           <div class="result-pos">${p.role}${p.approx ? ' <small class="approx">(ước lượng)</small>' : ""}</div>
           <h4>${p.sign.vi}</h4>
           <div class="big3-what">${p.what}</div>
@@ -117,13 +118,14 @@ document.getElementById("drawBtn").addEventListener("click", () => {
         <div class="result-pos">Nguyên tố trội</div>
         <h4>${dom[0]} (${dom[1]}/3 vị trí)</h4>
         <div class="meaning">Tổng kết: ${domText}.</div>
-        <button class="btn btn-ghost btn-sm" id="shareAstro">📤 Chia sẻ</button>
+        <button class="btn btn-ghost btn-sm" id="shareAstro">${ICON("share")}Chia sẻ</button>
       </div>
     </div>`;
 
   const box = document.getElementById("astroResult");
   box.innerHTML = html;
   box.hidden = false;
+  owlSay(`${name === "Bạn" ? "" : esc(name) + " à, "}Mặt Trời của bạn ở <b>${sun.vi}</b>, Mặt Trăng ghé <b>${moon.vi}</b>${asc ? `, còn Cung Mọc là <b>${asc.vi}</b>` : ""}. Nguyên tố <b>${dom[0]}</b> đang dẫn dắt bạn đấy!`);
   SFX.play("reveal");
   burstAt(box.querySelector(".astro-wheel-wrap"), 18);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });

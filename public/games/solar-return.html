@@ -13,9 +13,10 @@
   <meta name="description" content="Solar Return Chart vui vẻ: chủ đề năng lượng của năm sinh nhật, lá chủ đề và đếm ngược sinh nhật.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>☀️</text></svg>">
+  <link rel="stylesheet" href="../css/mystic.css">
+  <link rel="icon" href="../img/icon-192.png">
 </head>
 <body>
   <div class="stars" id="stars"></div>
@@ -23,34 +24,39 @@
   <div class="sparkles" id="sparkles"></div>
 
   <header class="site-header">
-    <div class="logo">🔮 <span>Tiệm Tarot</span></div>
+    <a class="logo" href="../game.html"><span data-icon="crystal"></span><span>Tiệm Tarot</span></a>
     <nav>
-      <a href="/">← Về tiệm</a>
+      <a href="../game.html">← Về tiệm</a>
       <a href="tarot.html">Tarot</a>
       <a href="chiem-tinh.html">Chiêm tinh</a>
       <a href="than-so.html">Thần số</a>
       <a href="ma-tran.html">Ma trận</a>
     </nav>
     <div class="header-ctl">
-      <button class="sound-toggle" id="musicToggle" title="Nhạc nền">🎵</button>
-      <button class="sound-toggle" id="soundToggle" title="Bật/tắt âm thanh">🔊</button>
-      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <button class="sound-toggle" id="musicToggle" title="Nhạc nền" aria-label="Bật nhạc nền"></button>
+      <button class="sound-toggle" id="soundToggle" title="Hiệu ứng âm thanh" aria-label="Bật/tắt âm thanh"></button>
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false" data-icon="menu"></button>
     </div>
   </header>
 
   <main>
     <section class="section game-hero">
-      <p class="hero-kicker">☀️ solar return chart</p>
+      <p class="hero-kicker">solar return chart</p>
       <h2 class="section-title">Solar Return</h2>
       <p class="section-sub">Mỗi sinh nhật, Mặt trời "về nhà" — và một năm cá nhân mới của bạn bắt đầu.</p>
 
+      <div class="narrator">
+        <div class="owl" data-owl></div>
+        <p class="bubble"><span class="who">Cú Nguyệt · người canh Mặt Trời</span><span class="say" id="owlSay"></span></p>
+      </div>
+
       <details class="guide">
-        <summary>📜 Cách chơi — đọc nhanh 20 giây</summary>
+        <summary><span data-icon="scroll"></span> Cách chơi — đọc nhanh 20 giây</summary>
         <ol>
           <li>Nhập <b>ngày sinh</b> rồi bấm <b>"Xem năm của tôi"</b>.</li>
           <li>Bạn sẽ thấy: <b>số năm cá nhân</b>, <b>chủ đề năm</b>, <b>lá bài chủ đề</b> và <b>đếm ngược</b> tới sinh nhật tiếp theo.</li>
         </ol>
-        <p class="guide-note">💡 Năm cá nhân tính từ sinh nhật gần nhất tới sinh nhật kế tiếp — không theo năm dương lịch.</p>
+        <p class="guide-note">Mẹo nhỏ: Năm cá nhân tính từ sinh nhật gần nhất tới sinh nhật kế tiếp — không theo năm dương lịch.</p>
       </details>
 
       <div class="form-card">
@@ -58,20 +64,21 @@
           <label>Tên của bạn<input type="text" id="nameInput" maxlength="40" placeholder="Ví dụ: Trâm Anh"></label>
           <label>Ngày sinh<input type="date" id="dobInput" min="1900-01-01" max="2100-12-31"></label>
         </div>
-        <button class="btn btn-gold" id="solarBtn">☀️ Xem năm của tôi</button>
+        <button class="btn btn-gold" id="solarBtn"><span data-icon="sun"></span>Xem năm của tôi</button>
       </div>
 
       <div id="solarResult" hidden></div>
     </section>
-    <a class="home-fab" href="/" title="Về trang chủ" aria-label="Về trang chủ">⌂</a>
+    <a class="home-fab" href="../game.html" title="Về tiệm" aria-label="Về tiệm" data-icon="home"></a>
 </main>
 
   <footer class="site-footer">
-    <p>☀️ Mặt trời mọc lại mỗi ngày — năm mới của bạn cũng vậy.</p>
+    <p><span data-icon="sun"></span> Mặt trời mọc lại mỗi ngày — năm mới của bạn cũng vậy.</p>
   </footer>
 
   <div class="toast" id="toast" hidden></div>
 
+  <script src="../js/icons.js"></script>
   <script src="../js/shared.js"></script>
   <script src="../js/cardart.js"></script>
   <script src="../js/data.js"></script>

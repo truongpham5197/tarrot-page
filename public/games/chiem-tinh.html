@@ -13,9 +13,10 @@
   <meta name="description" content="Bản đồ sao mini: cung Mặt trời, Mặt trăng, cung mọc và nguyên tố trội của bạn.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⭐</text></svg>">
+  <link rel="stylesheet" href="../css/mystic.css">
+  <link rel="icon" href="../img/icon-192.png">
 </head>
 <body>
   <div class="stars" id="stars"></div>
@@ -23,35 +24,40 @@
   <div class="sparkles" id="sparkles"></div>
 
   <header class="site-header">
-    <div class="logo">🔮 <span>Tiệm Tarot</span></div>
+    <a class="logo" href="../game.html"><span data-icon="crystal"></span><span>Tiệm Tarot</span></a>
     <nav>
-      <a href="/">← Về tiệm</a>
+      <a href="../game.html">← Về tiệm</a>
       <a href="tarot.html">Tarot</a>
       <a href="than-so.html">Thần số</a>
       <a href="ma-tran.html">Ma trận</a>
       <a href="solar-return.html">Solar Return</a>
     </nav>
     <div class="header-ctl">
-      <button class="sound-toggle" id="musicToggle" title="Nhạc nền">🎵</button>
-      <button class="sound-toggle" id="soundToggle" title="Bật/tắt âm thanh">🔊</button>
-      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <button class="sound-toggle" id="musicToggle" title="Nhạc nền" aria-label="Bật nhạc nền"></button>
+      <button class="sound-toggle" id="soundToggle" title="Hiệu ứng âm thanh" aria-label="Bật/tắt âm thanh"></button>
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false" data-icon="menu"></button>
     </div>
   </header>
 
   <main>
     <section class="section game-hero">
-      <p class="hero-kicker">⭐ chiêm tinh học</p>
+      <p class="hero-kicker">chiêm tinh học</p>
       <h2 class="section-title">Bản đồ sao mini</h2>
       <p class="section-sub">Nhập ngày & giờ sinh để xem bộ ba Big Three: Mặt trời · Mặt trăng · Cung mọc.</p>
 
+      <div class="narrator">
+        <div class="owl" data-owl></div>
+        <p class="bubble"><span class="who">Cú Nguyệt · người đọc sao</span><span class="say" id="owlSay"></span></p>
+      </div>
+
       <details class="guide">
-        <summary>📜 Cách chơi — đọc nhanh 20 giây</summary>
+        <summary><span data-icon="scroll"></span> Cách chơi — đọc nhanh 20 giây</summary>
         <ol>
           <li>Nhập <b>tên</b> và <b>ngày sinh</b> của bạn.</li>
           <li>Chọn <b>giờ sinh</b> (để tính cung mọc — không rõ thì chọn "Bí ẩn").</li>
           <li>Bấm <b>"Vẽ bản đồ sao"</b> và xem Big Three + nguyên tố trội.</li>
         </ol>
-        <p class="guide-note">💡 Mặt trăng & cung mọc ở đây là ước lượng vui vẻ — bản chuẩn cần giờ và nơi sinh chính xác.</p>
+        <p class="guide-note">Mẹo nhỏ: Mặt trăng & cung mọc ở đây là ước lượng vui vẻ — bản chuẩn cần giờ và nơi sinh chính xác.</p>
       </details>
 
       <div class="form-card">
@@ -64,12 +70,12 @@
             </select>
           </label>
         </div>
-        <button class="btn btn-gold" id="drawBtn">✨ Vẽ bản đồ sao</button>
+        <button class="btn btn-gold" id="drawBtn"><span data-icon="sparkle"></span>Vẽ bản đồ sao</button>
       </div>
 
       <div id="astroResult" hidden></div>
     </section>
-    <a class="home-fab" href="/" title="Về trang chủ" aria-label="Về trang chủ">⌂</a>
+    <a class="home-fab" href="../game.html" title="Về tiệm" aria-label="Về tiệm" data-icon="home"></a>
 </main>
 
   <footer class="site-footer">
@@ -78,6 +84,7 @@
 
   <div class="toast" id="toast" hidden></div>
 
+  <script src="../js/icons.js"></script>
   <script src="../js/shared.js"></script>
   <script src="../js/cardart.js"></script>
   <script src="../js/data.js"></script>
