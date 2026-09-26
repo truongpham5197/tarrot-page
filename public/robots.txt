@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lumiere-tarot-chiem-tinh.vercel.app/sitemap.xml
