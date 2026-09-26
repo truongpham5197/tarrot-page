@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiệm Tarot Đêm Khuya — Bói bài vui mỗi đêm</title>
+  <meta name="description" content="Tiệm Tarot đêm khuya: rút bài tarot 78 lá, hỏi Có/Không, xem tử vi 12 cung hoàng đạo và pha trăng — giải trí vui vẻ thôi!">
+  <meta name="theme-color" content="#0b0817">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta property="og:title" content="Tiệm Tarot Đêm Khuya 🔮">
+  <meta property="og:description" content="Ghé vào, nghĩ một câu hỏi, rút vài lá bài — vũ trụ trả lời.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔮</text></svg>">
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="nebula"></div>
+  <div class="sparkles" id="sparkles"></div>
+
+  <header class="site-header">
+    <div class="logo">🔮 <span>Tiệm Tarot</span></div>
+    <nav>
+      <a href="index.html">← Trang chủ</a>
+      <a href="#games">Trò chơi</a>
+      <a href="#boi-bai">Bói bài</a>
+      <a href="#la-cua-ngay">Lá của ngày</a>
+      <a href="#tu-vi">Tử vi 12 cung</a>
+    </nav>
+    <div class="header-ctl">
+      <button class="sound-toggle" id="musicToggle" title="Nhạc nền">🎵</button>
+      <button class="sound-toggle" id="soundToggle" title="Bật/tắt âm thanh">🔊</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <p class="hero-kicker">✦ mở cửa đến 3 giờ sáng ✦</p>
+      <h1>Tiệm <em>Tarot</em><br>Đêm Khuya</h1>
+      <p class="hero-sub">
+        Ghé vào, nghĩ một câu hỏi, rút vài lá bài.<br>
+        Vũ trụ trả lời — còn cười hay không thì tuỳ bạn.
+      </p>
+      <a class="btn btn-gold" href="#boi-bai">✨ Vào tiệm bói ngay</a>
+      <p class="disclaimer">* Giải trí vui vẻ thôi — đừng cưới hỏi hay mua nhà theo kết quả nhé.</p>
+    </section>
+
+    <!-- SÂN CHƠI VŨ TRỤ -->
+    <section id="games" class="section">
+      <h2 class="section-title">Sân chơi vũ trụ</h2>
+      <p class="section-sub">Chọn một cánh cửa — mỗi trò chơi là một góc nhỏ của chiêm tinh học.</p>
+      <div class="games-grid">
+        <a class="game-card" href="games/tarot.html">
+          <span class="g-icon">🃏</span>
+          <span class="g-name">Hành trình Kẻ Ngố</span>
+          <span class="g-desc">Tarot có cốt truyện — rút 5 lá, đọc câu chuyện 5 chương của chính bạn</span>
+        </a>
+        <a class="game-card" href="games/chiem-tinh.html">
+          <span class="g-icon">⭐</span>
+          <span class="g-name">Bản đồ sao mini</span>
+          <span class="g-desc">Chiêm tinh học — Mặt trời · Mặt trăng · Cung mọc & nguyên tố trội</span>
+        </a>
+        <a class="game-card" href="games/than-so.html">
+          <span class="g-icon">🔢</span>
+          <span class="g-name">Thần số học</span>
+          <span class="g-desc">Giải mã tên & ngày sinh — Đường đời, Linh hồn, Biểu đạt</span>
+        </a>
+        <a class="game-card" href="games/ma-tran.html">
+          <span class="g-icon">🧿</span>
+          <span class="g-name">Ma trận định mệnh</span>
+          <span class="g-desc">Matrix Destiny — 9 điểm năng lượng 1-22 từ ngày sinh của bạn</span>
+        </a>
+        <a class="game-card" href="games/solar-return.html">
+          <span class="g-icon">☀️</span>
+          <span class="g-name">Solar Return</span>
+          <span class="g-desc">Chủ đề năm cá nhân + đếm ngược tới sinh nhật tiếp theo</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- LÁ CỦA NGÀY + TRĂNG -->
+    <section id="la-cua-ngay" class="section">
+      <h2 class="section-title">Lá bài của ngày</h2>
+      <p class="section-sub">Mỗi ngày vũ trụ chia cho bạn một lá — hôm nay là lá này:</p>
+      <div class="daily-wrap">
+        <div class="tarot-card daily-card" id="dailyCard" role="button" tabindex="0" aria-label="Lật lá bài của ngày">
+          <div class="card-inner">
+            <div class="card-face card-back" id="dailyBack"></div>
+            <div class="card-face card-front" id="dailyFront"></div>
+          </div>
+        </div>
+        <div class="daily-info">
+          <h3 id="dailyName">Chạm lá bài để lật</h3>
+          <p id="dailyMeaning" class="meaning">Lá bài của ngày sẽ mách bạn vibe chính của 24h tới…</p>
+          <div class="moon-chip" id="moonChip"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BÓI BÀI -->
+    <section id="boi-bai" class="section">
+      <h2 class="section-title">Rút bài Tarot</h2>
+      <p class="section-sub">Hít một hơi thật sâu, nghĩ về câu hỏi của bạn, rồi chọn trải bài.</p>
+
+      <div class="question-box">
+        <input type="text" id="questionInput" maxlength="120"
+               placeholder="Nhập câu hỏi của bạn (hoặc để trống cũng được)…">
+        <button class="btn btn-ghost" id="suggestBtn" title="Gợi ý câu hỏi">🎲 Gợi ý</button>
+      </div>
+
+      <div class="spread-picker" id="spreadPicker">
+        <button class="btn btn-gold" data-spread="1">🃏 Trải 1 lá<small>Nhanh gọn — một thông điệp</small></button>
+        <button class="btn btn-gold" data-spread="3">🌌 Trải 3 lá<small>Quá khứ · Hiện tại · Tương lai</small></button>
+        <button class="btn btn-gold" data-spread="5">🔮 Trải 5 lá<small>Tình · Tiền · Sự nghiệp · Sức khoẻ · Lời khuyên</small></button>
+      </div>
+
+      <div class="deck-zone" id="deckZone" hidden>
+        <p class="deck-hint" id="deckHint"></p>
+        <div class="deck" id="deck"></div>
+      </div>
+
+      <div class="reveal-zone" id="revealZone" hidden>
+        <div class="picked-cards" id="pickedCards"></div>
+        <div class="reveal-actions">
+          <button class="btn btn-gold" id="flipBtn">✨ Lật bài</button>
+          <button class="btn btn-ghost" id="resetBtn">↺ Rút lại</button>
+        </div>
+      </div>
+
+      <div class="reading-result" id="readingResult" hidden></div>
+
+      <!-- HỎI NHANH CÓ/KHÔNG -->
+      <div class="yesno-box" id="yesnoBox">
+        <p class="yesno-title">⚡ Lười đọc dài? Hỏi nhanh <b>Có / Không</b></p>
+        <div class="yesno-controls">
+          <input type="text" id="yesnoInput" maxlength="100" placeholder="Ví dụ: Có nên ngủ sớm hôm nay không?">
+          <button class="btn btn-gold" id="yesnoBtn">Hỏi vũ trụ</button>
+        </div>
+        <div class="yesno-result" id="yesnoResult" hidden></div>
+      </div>
+
+      <!-- SỔ TAY BÓI -->
+      <div class="journal" id="journal" hidden>
+        <div class="journal-head">
+          <h3>📖 Sổ tay bói của bạn</h3>
+          <button class="btn btn-ghost btn-sm" id="clearJournal">Xoá sổ</button>
+        </div>
+        <ul class="journal-list" id="journalList"></ul>
+      </div>
+    </section>
+
+    <!-- TỬ VI -->
+    <section id="tu-vi" class="section">
+      <h2 class="section-title">Tử vi vui 12 cung</h2>
+      <p class="section-sub" id="horoDate">Chọn cung hoàng đạo của bạn:</p>
+      <div class="zodiac-grid" id="zodiacGrid"></div>
+      <div class="horo-result" id="horoResult" hidden></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>🔮 Tiệm Tarot Đêm Khuya — phục vụ niềm vui &amp; tín hiệu vũ trụ.</p>
+    <p class="tiny">Kết quả mang tính giải trí. Vũ trụ không chịu trách nhiệm về quyết định của bạn.</p>
+  </footer>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/shared.js"></script>
+  <script src="js/cardart.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/esoteric.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

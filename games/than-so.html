@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0817">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../img/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Thần Số Học — Giải mã tên & ngày sinh · Tiệm Tarot</title>
+  <meta name="description" content="Thần số học Pythagoras: Số Đường đời, Linh hồn, Biểu đạt, Ngày sinh và Năm cá nhân.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔢</text></svg>">
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="nebula"></div>
+  <div class="sparkles" id="sparkles"></div>
+
+  <header class="site-header">
+    <div class="logo">🔮 <span>Tiệm Tarot</span></div>
+    <nav>
+      <a href="../index.html">← Về tiệm</a>
+      <a href="tarot.html">Tarot</a>
+      <a href="chiem-tinh.html">Chiêm tinh</a>
+      <a href="ma-tran.html">Ma trận</a>
+      <a href="solar-return.html">Solar Return</a>
+    </nav>
+    <div class="header-ctl">
+      <button class="sound-toggle" id="musicToggle" title="Nhạc nền">🎵</button>
+      <button class="sound-toggle" id="soundToggle" title="Bật/tắt âm thanh">🔊</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="section game-hero">
+      <p class="hero-kicker">🔢 thần số học pythagoras</p>
+      <h2 class="section-title">Giải mã tên & ngày sinh</h2>
+      <p class="section-sub">Mỗi con số quanh bạn đều là một mật mã. Bóc từng lớp một nào.</p>
+
+      <details class="guide">
+        <summary>📜 Cách chơi & cách tính — đọc nhanh 30 giây</summary>
+        <ol>
+          <li>Nhập <b>họ tên đầy đủ</b> (viết có dấu cũng được, hệ thống tự quy đổi).</li>
+          <li>Chọn <b>ngày sinh</b> rồi bấm <b>"Giải mã"</b>.</li>
+          <li>Bạn nhận được 5 con số — mỗi số kèm <b>cách tính</b> để bạn tự kiểm chứng.</li>
+        </ol>
+        <p class="guide-note">💡 Quy tắc: cộng dồn các chữ số về 1 chữ số — <b>trừ</b> số master 11 và 22 được giữ nguyên.</p>
+      </details>
+
+      <div class="form-card">
+        <div class="form-row">
+          <label>Họ tên đầy đủ<input type="text" id="nameInput" maxlength="60" placeholder="Ví dụ: Nguyễn Trâm Anh"></label>
+          <label>Ngày sinh<input type="date" id="dobInput" min="1900-01-01" max="2100-12-31"></label>
+        </div>
+        <button class="btn btn-gold" id="decodeBtn">🔢 Giải mã</button>
+      </div>
+
+      <div id="numResult" hidden></div>
+    </section>
+    <a class="home-fab" href="../index.html" title="Về trang chủ" aria-label="Về trang chủ">⌂</a>
+</main>
+
+  <footer class="site-footer">
+    <p>🔢 Con số không quyết định số phận — nhưng kể câu chuyện khá hay.</p>
+  </footer>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="../js/shared.js"></script>
+  <script src="../js/cardart.js"></script>
+  <script src="../js/esoteric.js"></script>
+  <script src="../js/thanso.js"></script>
+</body>
+</html>
