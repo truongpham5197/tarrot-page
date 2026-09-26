@@ -13,9 +13,10 @@
   <meta name="description" content="Matrix Destiny Chart: tính các điểm năng lượng 1-22 từ ngày sinh và khám phá bản đồ định mệnh của bạn.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🧿</text></svg>">
+  <link rel="stylesheet" href="../css/mystic.css">
+  <link rel="icon" href="../img/icon-192.png">
 </head>
 <body>
   <div class="stars" id="stars"></div>
@@ -23,35 +24,35 @@
   <div class="sparkles" id="sparkles"></div>
 
   <header class="site-header">
-    <div class="logo">🔮 <span>Tiệm Tarot</span></div>
+    <a class="logo" href="../game.html"><span data-icon="crystal"></span><span>Tiệm Tarot</span></a>
     <nav>
-      <a href="/">← Về tiệm</a>
+      <a href="../game.html">← Về tiệm</a>
       <a href="tarot.html">Tarot</a>
       <a href="chiem-tinh.html">Chiêm tinh</a>
       <a href="than-so.html">Thần số</a>
       <a href="solar-return.html">Solar Return</a>
     </nav>
     <div class="header-ctl">
-      <button class="sound-toggle" id="musicToggle" title="Nhạc nền">🎵</button>
-      <button class="sound-toggle" id="soundToggle" title="Bật/tắt âm thanh">🔊</button>
-      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <button class="sound-toggle" id="musicToggle" title="Nhạc nền" aria-label="Bật nhạc nền"></button>
+      <button class="sound-toggle" id="soundToggle" title="Hiệu ứng âm thanh" aria-label="Bật/tắt âm thanh"></button>
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false" data-icon="menu"></button>
     </div>
   </header>
 
   <main>
     <section class="section game-hero">
-      <p class="hero-kicker">🧿 matrix destiny chart</p>
+      <p class="hero-kicker">matrix destiny chart</p>
       <h2 class="section-title">Ma Trận Định Mệnh</h2>
       <p class="section-sub">Ngày sinh của bạn mã hoá 22 năng lượng — cùng 22 lá Major Arcana. Bóc chúng ra nào.</p>
 
       <details class="guide">
-        <summary>📜 Cách chơi & cách tính — đọc nhanh 30 giây</summary>
+        <summary><span data-icon="scroll"></span> Cách chơi & cách tính — đọc nhanh 30 giây</summary>
         <ol>
           <li>Chọn <b>ngày sinh</b> rồi bấm <b>"Tính ma trận"</b>.</li>
           <li>Một <b>bát quái năng lượng</b> hiện ra với 9 điểm — mỗi điểm là một con số từ 1-22.</li>
           <li><b>Click từng điểm</b> để xem vị trí đó nói gì về bạn (nhân cách, karma, tình duyên, dòng tiền…).</li>
         </ol>
-        <p class="guide-note">💡 Quy tắc: số lớn hơn 22 được cộng các chữ số lại cho đến khi ≤ 22 (ví dụ: 25 → 2+5 = 7).</p>
+        <p class="guide-note">Quy tắc: số lớn hơn 22 được cộng các chữ số lại cho đến khi ≤ 22 (ví dụ: 25 → 2+5 = 7).</p>
       </details>
 
       <div class="form-card">
@@ -59,27 +60,28 @@
           <label>Tên của bạn<input type="text" id="nameInput" maxlength="40" placeholder="Ví dụ: Trâm Anh"></label>
           <label>Ngày sinh<input type="date" id="dobInput" min="1900-01-01" max="2100-12-31"></label>
         </div>
-        <button class="btn btn-gold" id="matrixBtn">🧿 Tính ma trận</button>
+        <button class="btn btn-gold" id="matrixBtn"><span data-icon="octagram"></span>Tính ma trận</button>
       </div>
 
       <div id="matrixResult" hidden>
         <div class="matrix-wrap">
           <div class="matrix-chart" id="matrixChart"></div>
           <div class="matrix-detail" id="matrixDetail">
-            <p class="guide-note">👆 Click vào các điểm năng lượng để đọc nghĩa.</p>
+            <p class="guide-note">Chạm vào các điểm năng lượng để đọc nghĩa.</p>
           </div>
         </div>
       </div>
     </section>
-    <a class="home-fab" href="/" title="Về trang chủ" aria-label="Về trang chủ">⌂</a>
+    <a class="home-fab" href="../game.html" title="Về tiệm" aria-label="Về tiệm" data-icon="home"></a>
 </main>
 
   <footer class="site-footer">
-    <p>🧿 Ma trận là bản đồ — còn đường đi thì do bạn chọn.</p>
+    <p><span data-icon="octagram"></span> Ma trận là bản đồ — còn đường đi thì do bạn chọn.</p>
   </footer>
 
   <div class="toast" id="toast" hidden></div>
 
+  <script src="../js/icons.js"></script>
   <script src="../js/shared.js"></script>
   <script src="../js/cardart.js"></script>
   <script src="../js/data.js"></script>

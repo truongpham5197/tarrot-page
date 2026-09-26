@@ -13,9 +13,10 @@
   <meta name="description" content="Thần số học Pythagoras: Số Đường đời, Linh hồn, Biểu đạt, Ngày sinh và Năm cá nhân.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔢</text></svg>">
+  <link rel="stylesheet" href="../css/mystic.css">
+  <link rel="icon" href="../img/icon-192.png">
 </head>
 <body>
   <div class="stars" id="stars"></div>
@@ -23,35 +24,35 @@
   <div class="sparkles" id="sparkles"></div>
 
   <header class="site-header">
-    <div class="logo">🔮 <span>Tiệm Tarot</span></div>
+    <a class="logo" href="../game.html"><span data-icon="crystal"></span><span>Tiệm Tarot</span></a>
     <nav>
-      <a href="/">← Về tiệm</a>
+      <a href="../game.html">← Về tiệm</a>
       <a href="tarot.html">Tarot</a>
       <a href="chiem-tinh.html">Chiêm tinh</a>
       <a href="ma-tran.html">Ma trận</a>
       <a href="solar-return.html">Solar Return</a>
     </nav>
     <div class="header-ctl">
-      <button class="sound-toggle" id="musicToggle" title="Nhạc nền">🎵</button>
-      <button class="sound-toggle" id="soundToggle" title="Bật/tắt âm thanh">🔊</button>
-      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <button class="sound-toggle" id="musicToggle" title="Nhạc nền" aria-label="Bật nhạc nền"></button>
+      <button class="sound-toggle" id="soundToggle" title="Hiệu ứng âm thanh" aria-label="Bật/tắt âm thanh"></button>
+      <button class="nav-toggle" id="navToggle" aria-label="Mở menu" aria-expanded="false" data-icon="menu"></button>
     </div>
   </header>
 
   <main>
     <section class="section game-hero">
-      <p class="hero-kicker">🔢 thần số học pythagoras</p>
+      <p class="hero-kicker">thần số học pythagoras</p>
       <h2 class="section-title">Giải mã tên & ngày sinh</h2>
       <p class="section-sub">Mỗi con số quanh bạn đều là một mật mã. Bóc từng lớp một nào.</p>
 
       <details class="guide">
-        <summary>📜 Cách chơi & cách tính — đọc nhanh 30 giây</summary>
+        <summary><span data-icon="scroll"></span> Cách chơi & cách tính — đọc nhanh 30 giây</summary>
         <ol>
           <li>Nhập <b>họ tên đầy đủ</b> (viết có dấu cũng được, hệ thống tự quy đổi).</li>
           <li>Chọn <b>ngày sinh</b> rồi bấm <b>"Giải mã"</b>.</li>
           <li>Bạn nhận được 5 con số — mỗi số kèm <b>cách tính</b> để bạn tự kiểm chứng.</li>
         </ol>
-        <p class="guide-note">💡 Quy tắc: cộng dồn các chữ số về 1 chữ số — <b>trừ</b> số master 11 và 22 được giữ nguyên.</p>
+        <p class="guide-note">Quy tắc: cộng dồn các chữ số về 1 chữ số — <b>trừ</b> số master 11 và 22 được giữ nguyên.</p>
       </details>
 
       <div class="form-card">
@@ -59,20 +60,21 @@
           <label>Họ tên đầy đủ<input type="text" id="nameInput" maxlength="60" placeholder="Ví dụ: Nguyễn Trâm Anh"></label>
           <label>Ngày sinh<input type="date" id="dobInput" min="1900-01-01" max="2100-12-31"></label>
         </div>
-        <button class="btn btn-gold" id="decodeBtn">🔢 Giải mã</button>
+        <button class="btn btn-gold" id="decodeBtn"><span data-icon="grid9"></span>Giải mã</button>
       </div>
 
       <div id="numResult" hidden></div>
     </section>
-    <a class="home-fab" href="/" title="Về trang chủ" aria-label="Về trang chủ">⌂</a>
+    <a class="home-fab" href="../game.html" title="Về tiệm" aria-label="Về tiệm" data-icon="home"></a>
 </main>
 
   <footer class="site-footer">
-    <p>🔢 Con số không quyết định số phận — nhưng kể câu chuyện khá hay.</p>
+    <p><span data-icon="grid9"></span> Con số không quyết định số phận — nhưng kể câu chuyện khá hay.</p>
   </footer>
 
   <div class="toast" id="toast" hidden></div>
 
+  <script src="../js/icons.js"></script>
   <script src="../js/shared.js"></script>
   <script src="../js/cardart.js"></script>
   <script src="../js/esoteric.js"></script>

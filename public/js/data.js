@@ -15,7 +15,7 @@ const MAJOR_DECK = [
     rev: "Có ai đó (hoặc chính bạn) đang 'ảo thuật' quá mức. Cẩn thận lời hứa nghe hay nhưng thiếu thật, kể cả với chính mình."
   },
   {
-    id: 2, name: "The High Priestess", vi: "Nữ Tu", icon: "🌙",
+    id: 2, name: "The High Priestess", vi: "Nữ Tư Tế", icon: "🌙",
     colors: ["#355c7d", "#6c5b7b"],
     keywords: ["trực giác", "bí mật", "nội tâm"],
     up: "Câu trả lời bạn tìm không nằm trên Google mà nằm trong bụng bạn. Im lặng một chút, nghe trực giác — nó đang thì thầm đúng đấy.",
@@ -60,7 +60,7 @@ const MAJOR_DECK = [
     id: 8, name: "Strength", vi: "Sức Mạnh", icon: "🦁",
     colors: ["#c02425", "#f0cb35"],
     keywords: ["kiên nhẫn", "dũng cảm", "mềm mại"],
-    up: "Sức mạnh thật sự không phải gầm lên mà là dịu dàng với con sư tử trong bạn. Kiên nhẫn hôm nay sẽ thắng ứng dụng thanh toán ngày mai. Bạn làm được.",
+    up: "Sức mạnh thật sự không phải gầm lên mà là dịu dàng với con sư tử trong bạn. Kiên nhẫn hôm nay sẽ thắng mọi cơn nóng vội ngày mai. Bạn làm được.",
     rev: "Tự ti đang gặm bạn lúc nửa đêm. Nhắc nhẹ: bạn đã sống sót qua 100% những ngày tệ nhất của mình rồi đấy."
   },
   {
@@ -158,18 +158,18 @@ const MAJOR_DECK = [
 
 // 12 cung hoàng đạo
 const ZODIAC_SIGNS = [
-  { id: "aries",       vi: "Bạch Dương",  icon: "♈", dates: "21/3 – 19/4",  element: "Lửa" },
-  { id: "taurus",      vi: "Kim Ngưu",    icon: "♉", dates: "20/4 – 20/5",  element: "Đất" },
-  { id: "gemini",      vi: "Song Tử",     icon: "♊", dates: "21/5 – 20/6",  element: "Khí" },
-  { id: "cancer",      vi: "Cự Giải",     icon: "♋", dates: "21/6 – 22/7",  element: "Nước" },
-  { id: "leo",         vi: "Sư Tử",       icon: "♌", dates: "23/7 – 22/8",  element: "Lửa" },
-  { id: "virgo",       vi: "Xử Nữ",       icon: "♍", dates: "23/8 – 22/9",  element: "Đất" },
-  { id: "libra",       vi: "Thiên Bình",  icon: "♎", dates: "23/9 – 22/10", element: "Khí" },
-  { id: "scorpio",     vi: "Bọ Cạp",      icon: "♏", dates: "23/10 – 21/11", element: "Nước" },
-  { id: "sagittarius", vi: "Nhân Mã",     icon: "♐", dates: "22/11 – 21/12", element: "Lửa" },
-  { id: "capricorn",   vi: "Ma Kết",      icon: "♑", dates: "22/12 – 19/1",  element: "Đất" },
-  { id: "aquarius",    vi: "Bảo Bình",    icon: "♒", dates: "20/1 – 18/2",   element: "Khí" },
-  { id: "pisces",      vi: "Song Ngư",    icon: "♓", dates: "19/2 – 20/3",   element: "Nước" }
+  { id: "aries",       vi: "Bạch Dương",  icon: "♈\uFE0E", dates: "21/3 – 19/4",  element: "Lửa" },
+  { id: "taurus",      vi: "Kim Ngưu",    icon: "♉\uFE0E", dates: "20/4 – 20/5",  element: "Đất" },
+  { id: "gemini",      vi: "Song Tử",     icon: "♊\uFE0E", dates: "21/5 – 20/6",  element: "Khí" },
+  { id: "cancer",      vi: "Cự Giải",     icon: "♋\uFE0E", dates: "21/6 – 22/7",  element: "Nước" },
+  { id: "leo",         vi: "Sư Tử",       icon: "♌\uFE0E", dates: "23/7 – 22/8",  element: "Lửa" },
+  { id: "virgo",       vi: "Xử Nữ",       icon: "♍\uFE0E", dates: "23/8 – 22/9",  element: "Đất" },
+  { id: "libra",       vi: "Thiên Bình",  icon: "♎\uFE0E", dates: "23/9 – 22/10", element: "Khí" },
+  { id: "scorpio",     vi: "Bọ Cạp",      icon: "♏\uFE0E", dates: "23/10 – 21/11", element: "Nước" },
+  { id: "sagittarius", vi: "Nhân Mã",     icon: "♐\uFE0E", dates: "22/11 – 21/12", element: "Lửa" },
+  { id: "capricorn",   vi: "Ma Kết",      icon: "♑\uFE0E", dates: "22/12 – 19/1",  element: "Đất" },
+  { id: "aquarius",    vi: "Bảo Bình",    icon: "♒\uFE0E", dates: "20/1 – 18/2",   element: "Khí" },
+  { id: "pisces",      vi: "Song Ngư",    icon: "♓\uFE0E", dates: "19/2 – 20/3",   element: "Nước" }
 ];
 
 // Nguyên liệu pha chế tử vi vui vẻ — gieo theo ngày + cung nên mỗi ngày một vị
@@ -306,12 +306,12 @@ const RANKS = [
   { r: "X",   vi: "Mười",     en: "Ten",    kw: "trọn vẹn",
     up: "Một chu kỳ khép lại trọn vẹn — có thể hơi nặng, nhưng đó là trái ngọt.",
     rev: "Gánh đang quá nặng — chia bớt, giao bớt, bỏ bớt vẫn là hoàn thành." },
-  { r: "J",   vi: "Đồng",     en: "Page",   kw: "tin vui",
+  { r: "J",   vi: "Tiểu Đồng", en: "Page",   kw: "tin vui",
     up: "Tin vui hoặc một bài học mới đang trên đường — giữ tâm trạng học trò.",
     rev: "Tin đồn thiên hạ nhiều hơn tin thật — kiểm chứng trước khi tin." },
   { r: "C",   vi: "Hiệp sĩ",  en: "Knight", kw: "hành động",
     up: "Năng lượng lao thẳng về phía trước — chọn hướng đúng rồi phi!",
-    rev: "Vội quá hoá quào — chậm 3 giây trước khi hành động." },
+    rev: "Vội quá hoá hỏng — chậm lại 3 giây trước khi hành động." },
   { r: "Q",   vi: "Hoàng hậu",en: "Queen",  kw: "làm chủ mềm",
     up: "Làm chủ một cách mềm mại — nuôi dưỡng vấn đề này như chăm cây.",
     rev: "Cho đi quá nhiều, giữ lại cho mình quá ít — cân lại đi." },

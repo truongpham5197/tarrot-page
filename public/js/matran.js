@@ -74,11 +74,12 @@ document.getElementById("matrixBtn").addEventListener("click", () => {
 
     detail.innerHTML = `
       <div class="m-detail-card">
+        ${cardThumb(card, false)}
         <div class="result-pos">${pos.label} · Năng lượng ${n}</div>
-        <h4>${card.icon} ${card.vi} <small>(${card.name})</small></h4>
-        <div class="m-hint">📍 ${pos.hint}</div>
+        <h4>${card.vi} <small>(${card.name})</small></h4>
+        <div class="m-hint">${ICON("compass")} ${pos.hint}</div>
         <div class="meaning">Con số ${n} mang ${DESTINY22[n - 1]}. Với ${esc(name)}, ở vị trí <b>${pos.label.toLowerCase()}</b>, năng lượng này tỏ rõ nhất — ${card.up}</div>
-        <div class="num-calc">🔍 ${calcDesc(key, { d, m, y, A, B, C, D, E })}</div>
+        <div class="num-calc">${calcDesc(key, { d, m, y, A, B, C, D, E })}</div>
       </div>`;
     SFX.play("pick");
     burstAt(chart.querySelector(`.m-node[data-key="${key}"]`), 8);

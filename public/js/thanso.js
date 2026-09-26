@@ -43,7 +43,7 @@ function numCard(icon, label, desc, num, chain, extra = "") {
         <div class="result-pos">${label}${master ? ' <small class="approx">MASTER</small>' : ""}</div>
         <h4>${m.name}</h4>
         <div class="num-desc">${desc}</div>
-        <div class="num-calc">🔍 ${chain}</div>
+        <div class="num-calc">${chain}</div>
         <div class="meaning">${m.text}</div>
         ${extra}
       </div>
@@ -65,30 +65,30 @@ document.getElementById("decodeBtn").addEventListener("click", () => {
   const birthday = calcChain(d);
   const personalYear = calcChain(reduceNum(d + m) + reduceNum(new Date().getFullYear()));
 
-  const nameHint = `<div class="num-calc">🔤 Chữ cái quy về số theo bảng Pythagoras (A=1…Z=8)</div>`;
+  const nameHint = `<div class="num-calc">Chữ cái quy về số theo bảng Pythagoras (A=1…Z=8)</div>`;
 
   const html = `
     <div class="result-card">
-      <div class="result-icon">👤</div>
+      <div class="result-icon">${ICON("mood")}</div>
       <div><div class="result-pos">Hồ sơ</div>
       <h4>${esc(name)}</h4>
       <div class="meaning">Sinh ${d}/${m}/${y} — vũ trụ xếp xong con số của bạn rồi đây:</div></div>
     </div>
     <div class="num-grid">
-      ${numCard("🛤️", NUM_LABELS.lifepath, NUM_LABELS.lifepathDesc, lifepath.final, `Ngày ${d} + Tháng ${m} + Năm ${y} = ${d + m + y} → ${lifepath.chain}`)}
-      ${numCard("💗", NUM_LABELS.soul, NUM_LABELS.soulDesc, soul.final, `Nguyên âm trong “${name}” = ${letterSum(name, true)} → ${soul.chain}`)}
-      ${numCard("🎭", NUM_LABELS.expression, NUM_LABELS.expressionDesc, expr.final, `Toàn bộ “${name}” = ${letterSum(name)} → ${expr.chain}`)}
-      ${numCard("🎂", NUM_LABELS.birthday, NUM_LABELS.birthdayDesc, birthday.final, `Ngày sinh ${d} → ${birthday.chain}`)}
-      ${numCard("📅", NUM_LABELS.personalYear, NUM_LABELS.personalYearDesc, personalYear.final, `Ngày+tháng sinh (${reduceNum(d + m)}) + năm ${new Date().getFullYear()} (${reduceNum(new Date().getFullYear())}) → ${personalYear.chain}`, nameHint)}
+      ${numCard(ICON("compass"), NUM_LABELS.lifepath, NUM_LABELS.lifepathDesc, lifepath.final, `Ngày ${d} + Tháng ${m} + Năm ${y} = ${d + m + y} → ${lifepath.chain}`)}
+      ${numCard(ICON("heart"), NUM_LABELS.soul, NUM_LABELS.soulDesc, soul.final, `Nguyên âm trong “${name}” = ${letterSum(name, true)} → ${soul.chain}`)}
+      ${numCard(ICON("chat"), NUM_LABELS.expression, NUM_LABELS.expressionDesc, expr.final, `Toàn bộ “${name}” = ${letterSum(name)} → ${expr.chain}`)}
+      ${numCard(ICON("candle"), NUM_LABELS.birthday, NUM_LABELS.birthdayDesc, birthday.final, `Ngày sinh ${d} → ${birthday.chain}`)}
+      ${numCard(ICON("hourglass"), NUM_LABELS.personalYear, NUM_LABELS.personalYearDesc, personalYear.final, `Ngày+tháng sinh (${reduceNum(d + m)}) + năm ${new Date().getFullYear()} (${reduceNum(new Date().getFullYear())}) → ${personalYear.chain}`, nameHint)}
     </div>
     <div class="result-card">
-      <div class="result-icon">🧩</div>
+      <div class="result-icon">${ICON("amulet")}</div>
       <div>
         <div class="result-pos">Ghép lại</div>
         <div class="meaning">
           Tóm gọn: đường đời <b>${lifepath.final}</b> · linh hồn khát <b>${soul.final}</b> · thế giới thấy <b>${expr.final}</b> · quà trời cho <b>${birthday.final}</b> · năm nay đang chạy vibe số <b>${personalYear.final}</b>.
         </div>
-        <button class="btn btn-ghost btn-sm" id="shareNum">📤 Chia sẻ</button>
+        <button class="btn btn-ghost btn-sm" id="shareNum">${ICON("share")}Chia sẻ</button>
       </div>
     </div>`;
 
