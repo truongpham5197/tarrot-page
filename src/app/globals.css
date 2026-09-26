@@ -163,6 +163,16 @@
   .format-card h3 { font-size: 25px; line-height: 1.05; margin: 8px 0 10px; }
   .format-card div > p:last-child { color: var(--muted); font-size: 12px; }
 
+  /* Game banner — phần mới dẫn sang sân chơi miễn phí */
+  .game-banner { background: var(--background-dark); color: var(--text-light); overflow: hidden; position: relative; }
+  .game-banner .gb-inner { align-items: center; display: flex; gap: 45px; justify-content: space-between; padding-block: 66px; position: relative; z-index: 2; }
+  .game-banner h3 { font-family: var(--serif); font-size: clamp(30px, 3.4vw, 44px); font-weight: 500; letter-spacing: -.02em; line-height: 1.05; margin: 14px 0 10px; }
+  .game-banner p { color: #94a0a2; font-size: 13px; max-width: 640px; }
+  .gb-mini { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .gb-mini a { border: 1px solid rgba(217,168,95,.35); border-radius: 99px; color: var(--gold-light); font-size: 10px; font-weight: 600; letter-spacing: .05em; padding: 7px 14px; text-transform: uppercase; transition: background .2s, border-color .2s; }
+  .gb-mini a:hover { background: rgba(217,168,95,.12); border-color: var(--gold); }
+  .game-banner::after { background: radial-gradient(circle, rgba(217,168,95,.12), transparent 62%); content: ""; height: 420px; position: absolute; right: -90px; top: -140px; width: 420px; }
+
   .pricing { background: var(--surface); }
   .pricing-header { align-items: end; display: grid; gap: 40px; grid-template-columns: 1fr auto; }
   .pricing-header h2 { max-width: 760px; }
@@ -359,6 +369,7 @@
     .testimonial-card { scroll-snap-align: start; }
     .testimonial-empty { grid-template-columns: 70px 1fr; }
     .testimonial-empty > div:last-child { grid-column: 2; }
+    .game-banner .gb-inner { flex-direction: column; align-items: flex-start; }
     .about-grid { grid-template-columns: 1fr; }
     .reader-portrait { margin-inline: auto; max-width: 580px; width: 100%; }
     .faq-grid { gap: 50px; grid-template-columns: 1fr; }

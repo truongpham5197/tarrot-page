@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07111a">
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="public/manifest.webmanifest">
   <link rel="icon" type="image/png" href="img/icon-192.png">
   <link rel="apple-touch-icon" href="img/icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,7 +36,7 @@
           <a href="#ve-minh">Về mình</a>
           <a href="#cam-nhan">Cảm nhận khách hàng</a>
           <a href="#faq">FAQ</a>
-          <a class="game-link" href="game.html">Trò chơi ✦</a>
+          <a class="game-link" href="public/game.html">Trò chơi ✦</a>
         </nav>
         <a class="button button-gold button-compact desktop-booking" href="https://lumiere-tarot-chiem-tinh.vercel.app/booking">Đặt lịch ngay <span>→</span></a>
         <button class="menu-button" type="button" id="menuBtn" aria-label="Mở menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -49,7 +49,7 @@
         <a href="#ve-minh">Về mình</a>
         <a href="#cam-nhan">Cảm nhận khách hàng</a>
         <a href="#faq">FAQ</a>
-        <a class="game-link" href="game.html">Trò chơi miễn phí ✦</a>
+        <a class="game-link" href="public/game.html">Trò chơi miễn phí ✦</a>
         <a class="button button-gold" href="https://lumiere-tarot-chiem-tinh.vercel.app/booking">Đặt lịch ngay <span>→</span></a>
       </nav>
     </header>
@@ -160,14 +160,14 @@
         <h3>Sân chơi Tarot &amp; Chiêm tinh đêm khuya</h3>
         <p>Trước khi đặt lịch tư vấn, bạn có thể thử tự mình kéo vài lá: rút bài tarot 78 lá, hỏi Có/Không, xem tử vi, thần số, ma trận định mệnh — vui mà vẫn chiêm nghiệm.</p>
         <div class="gb-mini">
-          <a href="games/tarot.html">🃏 Tarot cốt truyện</a>
-          <a href="games/chiem-tinh.html">⭐ Bản đồ sao</a>
-          <a href="games/than-so.html">🔢 Thần số học</a>
-          <a href="games/ma-tran.html">🧿 Ma trận</a>
-          <a href="games/solar-return.html">☀️ Solar Return</a>
+          <a href="public/games/tarot.html">🃏 Tarot cốt truyện</a>
+          <a href="public/games/chiem-tinh.html">⭐ Bản đồ sao</a>
+          <a href="public/games/than-so.html">🔢 Thần số học</a>
+          <a href="public/games/ma-tran.html">🧿 Ma trận</a>
+          <a href="public/games/solar-return.html">☀️ Solar Return</a>
         </div>
       </div>
-      <a class="button button-gold" href="game.html">Vào chơi ngay <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a class="button button-gold" href="public/game.html">Vào chơi ngay <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
     </div>
   </section>
 
@@ -320,7 +320,7 @@
         <a href="#ve-minh">Về mình</a>
         <a href="#cam-nhan">Cảm nhận khách hàng</a>
         <a href="#faq">FAQ</a>
-        <a href="game.html">Trò chơi miễn phí ✦</a>
+        <a href="public/game.html">Trò chơi miễn phí ✦</a>
       </nav>
       <nav>
         <strong>Kết nối</strong>
@@ -363,7 +363,7 @@
   })();
   // Đăng ký PWA service worker
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+    addEventListener("load", () => navigator.serviceWorker.register("public/sw.js").catch(() => {}));
   }
 </script>
 </body>

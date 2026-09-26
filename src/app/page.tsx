@@ -163,6 +163,25 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="game-banner" id="tro-choi">
+        <div className="final-stars" aria-hidden="true" />
+        <div className="container gb-inner">
+          <div>
+            <p className="eyebrow eyebrow-gold">Mở cửa miễn phí</p>
+            <h3>Sân chơi Tarot &amp; Chiêm tinh đêm khuya</h3>
+            <p>Trước khi đặt lịch tư vấn, bạn có thể thử tự mình kéo vài lá: rút bài tarot 78 lá, hỏi Có/Không, xem tử vi, thần số, ma trận định mệnh — vui mà vẫn chiêm nghiệm.</p>
+            <div className="gb-mini">
+              <a href="/games/tarot.html">Tarot cốt truyện</a>
+              <a href="/games/chiem-tinh.html">Bản đồ sao</a>
+              <a href="/games/than-so.html">Thần số học</a>
+              <a href="/games/ma-tran.html">Ma trận</a>
+              <a href="/games/solar-return.html">Solar Return</a>
+            </div>
+          </div>
+          <a className="button button-gold" href="/game.html">Vào chơi ngay <ArrowRight size={17} /></a>
+        </div>
+      </section>
+
       <section className="section pricing" id="goi-dich-vu">
         <div className="container">
           <header className="section-header pricing-header">
@@ -240,7 +259,7 @@ export default function Home() {
       <footer className="footer">
         <div className="container footer-grid">
           <div className="footer-brand"><div className="brand"><span className="brand-symbol"><Sparkles size={18} /></span><span className="brand-copy"><strong>Lumiere</strong><small>Tựa sáng điều bên trong</small></span></div><p>Tarot · Chiêm tinh · Thần số · Matrix Destiny · Solar Return</p></div>
-          <nav><strong>Khám phá</strong><a href="#trang-chu">Trang chủ</a><a href="#dich-vu">Dịch vụ</a><a href="#ve-minh">Về mình</a><a href="#cam-nhan">Cảm nhận khách hàng</a><a href="#faq">FAQ</a></nav>
+          <nav><strong>Khám phá</strong><a href="#trang-chu">Trang chủ</a><a href="#dich-vu">Dịch vụ</a><a href="#ve-minh">Về mình</a><a href="#cam-nhan">Cảm nhận khách hàng</a><a href="#faq">FAQ</a><a href="/game.html">Trò chơi miễn phí ✦</a></nav>
           <nav><strong>Kết nối</strong><a href="https://zalo.me/0328052889" target="_blank" rel="noreferrer">Zalo · 0328 052 889</a><a href="https://www.facebook.com/misocduabeonhuheo" target="_blank" rel="noreferrer">Facebook</a><a href="tel:0328052889">Gọi điện</a></nav>
           <div className="footer-note"><ShieldCheck /><p>Nội dung mang tính tham khảo, chiêm nghiệm; không thay thế tư vấn y tế, pháp lý hoặc tài chính.</p></div>
           <div className="footer-bottom"><span>© 2026 Lumiere. All rights reserved.</span><span>Online · Offline · PDF</span></div>
