@@ -319,3 +319,50 @@
   .hero .narrator .owl, .game-hero > .narrator .owl { width: 70px; height: 70px; }
   .hero .narrator .owl::after, .game-hero > .narrator .owl::after { transform-origin: 2.5px 45px; }
 }
+
+/* ---- Mobile: phản hồi khi chạm ---- */
+.tap-ripple {
+  position: fixed; z-index: 61; pointer-events: none;
+  width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%;
+  border: 1.5px solid rgba(247,227,161,.55);
+  box-shadow: 0 0 14px rgba(232,200,116,.35), inset 0 0 10px rgba(185,164,255,.25);
+  animation: tapRipple .55s cubic-bezier(.2,.7,.3,1) forwards;
+}
+.tap-ripple.strong { border-color: rgba(247,227,161,.9); animation-duration: .7s; }
+@keyframes tapRipple {
+  from { transform: scale(.2); opacity: 1; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+.owl { cursor: pointer; -webkit-user-select: none; user-select: none; }
+.owl-poke { animation: owlPoke .6s cubic-bezier(.3,1.6,.5,1) !important; }
+@keyframes owlPoke {
+  0% { transform: scale(1); } 30% { transform: scale(.86) rotate(-8deg); }
+  60% { transform: scale(1.1) rotate(6deg); } 100% { transform: scale(1); }
+}
+.owl-hoot {
+  position: fixed; z-index: 62; pointer-events: none; white-space: nowrap;
+  padding: 4px 10px; border-radius: 999px; font: 600 .78rem/1.3 "Be Vietnam Pro", sans-serif;
+  color: #1a1030; background: linear-gradient(135deg, #f7e3a1, #e9c874);
+  box-shadow: 0 6px 18px rgba(0,0,0,.45), 0 0 14px rgba(232,200,116,.4);
+  animation: owlHoot 1.5s ease-out forwards;
+}
+@keyframes owlHoot {
+  0% { transform: translate(-50%, 0) scale(.5); opacity: 0; }
+  15% { transform: translate(-50%, -26px) scale(1.05); opacity: 1; }
+  75% { transform: translate(-50%, -34px) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -48px) scale(.9); opacity: 0; }
+}
+@media (hover: none) {
+  button, .btn, a, summary, [role=button] { touch-action: manipulation; }
+  .game-card { transition: rotate .3s ease-out, transform .18s ease, box-shadow .25s; }
+  .game-card:active { transform: scale(.97); box-shadow: 0 0 0 1px rgba(232,200,116,.5), 0 0 28px rgba(232,200,116,.28); }
+  .game-card:active .g-icon { transform: rotate(18deg) scale(1.08); }
+  .deck .tarot-card:active:not(.chosen) { --lift: -18px; z-index: 5; filter: brightness(1.15) drop-shadow(0 0 12px rgba(232,200,116,.55)); }
+  .deck .tarot-card:active .card-back::after { background-position: -20% 0; }
+  .zodiac-grid > *:active { transform: scale(.94); }
+  .sound-toggle:active, .home-fab:active, .nav-toggle:active { transform: scale(.88); }
+  .gyro-on .tarot-card .shine { opacity: .85; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .owl-poke { animation: none !important; }
+}

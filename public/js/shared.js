@@ -31,6 +31,7 @@ const esc = s => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(pointer: fine)").matches;
+const GYRO = { x: 0, y: 0 }; // độ nghiêng máy (-1..1), cập nhật bởi initTouchFX
 
 // ---- Bầu trời đêm (canvas): sao lấp lánh, chòm sao hiện dần, sao băng ----
 function makeStars() {
@@ -80,12 +81,13 @@ function makeStars() {
     g.clearRect(0, 0, W, H);
     for (const s of stars) {
       const a = reduceMotion ? .6 : .35 + .65 * Math.abs(Math.sin(s.tw + t / 1000 * s.sp));
-      const y = ((s.y - scroll * s.depth * .08) % H + H) % H;
+      const y = ((s.y - scroll * s.depth * .08 + GYRO.y * s.depth * 18) % H + H) % H;
       g.fillStyle = `rgba(${s.tint},${a})`;
-      g.beginPath(); g.arc(s.x, y, s.r, 0, 7); g.fill();
+      const x = s.x + GYRO.x * s.depth * 18;
+      g.beginPath(); g.arc(x, y, s.r, 0, 7); g.fill();
       if (s.r > 1.3) { // sao sáng có quầng
         g.fillStyle = `rgba(${s.tint},${a * .12})`;
-        g.beginPath(); g.arc(s.x, y, s.r * 4, 0, 7); g.fill();
+        g.beginPath(); g.arc(x, y, s.r * 4, 0, 7); g.fill();
       }
     }
     for (const c of constellations) {
@@ -125,7 +127,8 @@ function makeStars() {
 
 // Vệt bụi sao theo con trỏ + nghiêng 3D lá bài khi rê chuột
 function initAmbientFX() {
-  if (reduceMotion || !finePointer) return;
+  if (!finePointer) return initTouchFX();
+  if (reduceMotion) return;
   let lastDust = 0;
   addEventListener("pointermove", e => {
     const now = performance.now();
@@ -156,6 +159,118 @@ function initAmbientFX() {
     if (el && !el.contains(e.relatedTarget)) el.style.rotate = "";
   });
 }
+
+// ---- Mobile: gợn sáng khi chạm, rung nhẹ, nghiêng theo con quay, vệt bụi sao theo ngón tay ----
+const HAPTIC = {
+  tap: 6, pick: 12, flip: [8, 40, 16], shuffle: [6, 70, 6, 70, 6, 70, 14],
+  reveal: [10, 60, 10, 60, 28], yes: [14, 50, 14], no: 45, fx: [10, 30, 22], owl: [8, 60, 8]
+};
+function haptic(kind) {
+  const p = HAPTIC[kind];
+  if (p && navigator.vibrate && !finePointer) try { navigator.vibrate(p); } catch {}
+}
+const TAPPABLE = "a, button, select, input, summary, [role=button], .tarot-card, .game-card, .zodiac-grid > *, .m-point, [data-owl]";
+
+function tapRipple(x, y, strong) {
+  const r = document.createElement("span");
+  r.className = "tap-ripple" + (strong ? " strong" : "");
+  r.style.left = x + "px"; r.style.top = y + "px";
+  document.body.appendChild(r);
+  r.addEventListener("animationend", () => r.remove());
+  if (strong) burst(x, y, 5, ["#f7e3a1", "#fff9ea", "#b9a4ff"], ["✦", "⋆", "✧"]);
+}
+
+function initTouchFX() {
+  // Chạm: vòng sáng vàng + rung khẽ trên phần tử bấm được
+  document.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse") return;
+    const hit = e.target.closest?.(TAPPABLE);
+    if (hit) haptic("tap");
+    if (!reduceMotion) tapRipple(e.clientX, e.clientY, !!hit);
+  }, { passive: true });
+
+  // Rung theo âm thanh sự kiện (kể cả khi đã tắt tiếng)
+  const play = SFX.play, fx = SFX.fx;
+  SFX.play = kind => { haptic(kind); play(kind); };
+  SFX.fx = kind => { haptic("fx"); fx(kind); };
+
+  if (reduceMotion) return;
+
+  // Vệt bụi sao theo ngón tay khi vuốt
+  let lastDust = 0;
+  addEventListener("touchmove", e => {
+    const now = performance.now();
+    if (now - lastDust < 60) return;
+    lastDust = now;
+    const t = e.touches[0];
+    const d = document.createElement("span");
+    d.className = "stardust";
+    d.style.left = t.clientX + "px"; d.style.top = t.clientY + "px";
+    document.body.appendChild(d);
+    d.animate([
+      { transform: "translate(-50%,-50%) scale(1.3)", opacity: .95 },
+      { transform: `translate(${(Math.random() - .5) * 30 - 15}px, ${10 + Math.random() * 20}px) scale(0)`, opacity: 0 }
+    ], { duration: 800, easing: "ease-out" }).onfinish = () => d.remove();
+  }, { passive: true });
+
+  // Con quay: bầu trời trôi theo tay cầm, lá bài nghiêng + ánh bóng chạy
+  let base = null, gx = 0, gy = 0, raf = 0;
+  const TILT = ".daily-card, .picked-cards .tarot-card, .game-card";
+  function onOrient(e) {
+    if (e.beta == null) return;
+    if (!base) base = { b: e.beta, g: e.gamma };
+    // trôi dần về tư thế cầm máy hiện tại
+    base.b += (e.beta - base.b) * .01; base.g += (e.gamma - base.g) * .01;
+    gx = Math.max(-1, Math.min(1, (e.gamma - base.g) / 25));
+    gy = Math.max(-1, Math.min(1, (e.beta - base.b) / 25));
+    if (!raf) raf = requestAnimationFrame(apply);
+  }
+  function apply() {
+    raf = 0;
+    GYRO.x += (gx - GYRO.x) * .5; GYRO.y += (gy - GYRO.y) * .5;
+    const ang = Math.hypot(GYRO.x, GYRO.y) * 12;
+    const rot = ang > .3 ? `${-GYRO.y} ${GYRO.x} 0 ${ang.toFixed(2)}deg` : "";
+    document.querySelectorAll(TILT).forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      el.style.rotate = rot;
+      el.style.setProperty("--mx", `${50 + GYRO.x * 45}%`);
+      el.style.setProperty("--my", `${40 + GYRO.y * 40}%`);
+    });
+    document.documentElement.classList.toggle("gyro-on", !!rot);
+  }
+  const DOE = window.DeviceOrientationEvent;
+  if (!DOE) return;
+  addEventListener("deviceorientation", onOrient); // Android: chạy ngay
+  if (typeof DOE.requestPermission === "function") {
+    // iOS: chỉ xin quyền khi chưa có dữ liệu và người chơi chạm vào lá bài lần đầu
+    const ask = e => {
+      if (base || !e.target.closest?.(".tarot-card, .daily-card")) return;
+      document.removeEventListener("click", ask, true);
+      DOE.requestPermission().catch(() => {});
+    };
+    document.addEventListener("click", ask, true);
+  }
+}
+
+// Chạm vào Cú Nguyệt: cú nhún, kêu "hú hú" và rắc lông sao
+const OWL_HOOTS = ["Hú hú~", "Hú… ta đây!", "Nhột quá!", "Hú hú, hỏi gì nào?", "Suỵt, sao đang nghe", "Hú~ bình tĩnh nha"];
+document.addEventListener("click", e => {
+  const owl = e.target.closest?.(".owl");
+  if (!owl) return;
+  haptic("owl");
+  SFX.play("chime");
+  owl.classList.remove("owl-poke"); void owl.offsetWidth; owl.classList.add("owl-poke");
+  owl.addEventListener("animationend", ev => { if (ev.animationName === "owlPoke") owl.classList.remove("owl-poke"); }, { once: true });
+  const r = owl.getBoundingClientRect();
+  if (!reduceMotion) burst(r.left + r.width / 2, r.top + r.height / 3, 10, ["#f7e3a1", "#fff9ea", "#c9b8ff"], ["✦", "❋", "⋆"]);
+  const pop = document.createElement("span");
+  pop.className = "owl-hoot";
+  pop.textContent = OWL_HOOTS[Math.floor(Math.random() * OWL_HOOTS.length)];
+  pop.style.left = r.left + r.width / 2 + "px"; pop.style.top = r.top + "px";
+  document.body.appendChild(pop);
+  pop.addEventListener("animationend", () => pop.remove());
+});
 
 // ---- Lõi âm thanh WebAudio: bus chung có nén + reverb (sinh impulse, không cần file) ----
 const AudioCore = (() => {
