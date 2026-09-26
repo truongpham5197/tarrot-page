@@ -1,6 +1,6 @@
 /* Service Worker — Tiệm Tarot Đêm Khuya
    Precache core files; runtime cache-first cho ảnh lá bài & font. */
-const CACHE = "tiem-tarot-v5";
+const CACHE = "tiem-tarot-v9";
 const CORE = [
   "./game.html",
   "./manifest.webmanifest",
@@ -11,6 +11,7 @@ const CORE = [
   "./img/cu-nguyet-384.webp",
   "./js/shared.js",
   "./js/data.js",
+  "./js/meanings.js",
   "./js/esoteric.js",
   "./js/cardart.js",
   "./js/app.js",
@@ -43,6 +44,8 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET") return;
+  // Nhạc nền (file lớn, Range request/206 không cache được): để trình duyệt tự tải, không qua SW
+  if (e.request.destination === "audio" || url.pathname.includes("/audio/")) return;
 
   // Ảnh lá bài + icon: cache-first (không đổi bao giờ)
   if (url.origin === location.origin && url.pathname.includes("/img/")) {

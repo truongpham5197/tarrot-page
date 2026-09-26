@@ -416,10 +416,25 @@ const SFX = (() => {
   };
 })();
 
-// ---- Nhạc nền "đêm khuya": drone trầm + pad thở chậm + chuông gió ngẫu nhiên ----
+// ---- Nhạc nền: piano cổ điển (Beethoven, Mozart) — bản thu Public domain / CC0 từ Wikimedia Commons ----
+// Nguồn: commons.wikimedia.org (Musopen), nén lại MP3 96kbps, host tại public/audio.
+// Không tải được (offline…) → lùi về nhạc tổng hợp "đêm khuya".
+// Đường dẫn tính theo vị trí shared.js để dùng được cả ở trang con games/*.html
+const AUDIO_BASE = new URL("../audio/", document.currentScript?.src || location.href).href;
+const PIANO_TRACKS = [
+  { composer: "Beethoven", title: "Sonata Ánh Trăng — I. Adagio sostenuto",
+    src: AUDIO_BASE + "moonlight.mp3" },
+  { composer: "Mozart", title: "Sonata số 13, K.333 — II. Andante cantabile",
+    src: AUDIO_BASE + "mozart-k333-andante.mp3" },
+  { composer: "Beethoven", title: "Sonata Bi Thương — II. Adagio cantabile",
+    src: AUDIO_BASE + "pathetique-adagio.mp3" },
+  { composer: "Mozart", title: "Sonata số 16, K.545 — I. Allegro",
+    src: AUDIO_BASE + "mozart-k545-allegro.mp3" }
+];
+
 const Music = (() => {
   let master = null, timers = [], drones = [], started = false;
-  let playing = localStorage.getItem("tiem-music") === "on";
+  let playing = localStorage.getItem("tiem-music") !== "off"; // mặc định bật
   // Dm9 – B♭maj7 – Gm9 – A7sus4: u huyền, lơ lửng, không bao giờ "chốt"
   const CHORDS = [
     [146.83, 220.0, 261.63, 329.63],
@@ -475,7 +490,7 @@ const Music = (() => {
     g.gain.exponentialRampToValueAtTime(.0001, t + 4);
     o.connect(g).connect(master); o.start(t); o.stop(t + 4.1);
   }
-  function start() {
+  function synthStart() {
     if (started) return;
     const a = AudioCore.get();
     master = AudioCore.out(.9);
@@ -485,7 +500,7 @@ const Music = (() => {
     drone(); tick();
     timers.push(setInterval(tick, 9000));
   }
-  function stop() {
+  function synthStop() {
     if (!started) return;
     started = false;
     timers.forEach(id => { clearTimeout(id); clearInterval(id); }); timers = [];
@@ -495,15 +510,67 @@ const Music = (() => {
     m.gain.linearRampToValueAtTime(0, a.currentTime + 1.5);
     setTimeout(() => { d.forEach(o => { try { o.stop(); } catch { /* đã dừng */ } }); m.disconnect(); }, 1700);
   }
+  // ---- Piano: phát lần lượt danh sách (xáo trộn), fade vào/ra, lỗi bài nào bỏ qua bài đó ----
+  const VOL = .45;
+  let audio = null, order = [], idx = 0, fails = 0, fadeTimer = null, pianoOn = false, useSynth = false;
+  function fadeTo(target, ms, done) {
+    clearInterval(fadeTimer);
+    const from = audio.volume, steps = Math.max(1, Math.round(ms / 50));
+    let i = 0;
+    fadeTimer = setInterval(() => {
+      audio.volume = Math.min(1, Math.max(0, from + (target - from) * (++i / steps)));
+      if (i >= steps) { clearInterval(fadeTimer); if (done) done(); }
+    }, 50);
+  }
+  function shuffle() {
+    order = PIANO_TRACKS.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+  }
+  function playCurrent() {
+    audio.src = PIANO_TRACKS[order[idx]].src;
+    audio.volume = 0;
+    audio.play().then(() => fadeTo(VOL, 3000)).catch(() => { /* autoplay bị chặn — chờ cử chỉ người dùng */ });
+  }
+  function next() {
+    if (++idx >= order.length) { shuffle(); idx = 0; }
+    playCurrent();
+  }
+  function pianoStart() {
+    if (!audio) {
+      audio = new Audio();
+      audio.preload = "auto";
+      audio.addEventListener("ended", () => { fails = 0; next(); });
+      audio.addEventListener("playing", () => { fails = 0; });
+      audio.addEventListener("error", () => {
+        if (!pianoOn) return;
+        if (++fails >= PIANO_TRACKS.length) { pianoOn = false; useSynth = true; synthStart(); return; }
+        next();
+      });
+      shuffle();
+    }
+    pianoOn = true;
+    if (audio.src && !audio.ended) audio.play().then(() => fadeTo(VOL, 2000)).catch(() => {});
+    else playCurrent();
+  }
+  function pianoStop() {
+    pianoOn = false;
+    if (audio && !audio.paused) fadeTo(0, 1500, () => { if (!pianoOn) audio.pause(); });
+  }
+  const start = () => (useSynth ? synthStart() : pianoStart());
+  const stop = () => { pianoStop(); synthStop(); };
+
   return {
     isPlaying: () => playing,
     toggle() {
+      // Đang "bật" nhưng autoplay bị chặn nên chưa có tiếng → lần bấm này là để nghe, không phải tắt
+      if (playing && !started && !(audio && !audio.paused)) { start(); return true; }
       playing = !playing;
       localStorage.setItem("tiem-music", playing ? "on" : "off");
       playing ? start() : stop();
       return playing;
     },
-    resumeIfWanted() { if (playing && !started) start(); }
+    current: () => (useSynth || !order.length ? null : PIANO_TRACKS[order[idx]]),
+    resumeIfWanted() { if (playing && !started && !(audio && !audio.paused)) start(); }
   };
 })();
 
@@ -526,13 +593,16 @@ function initSoundToggle() {
       mus.classList.toggle("playing", Music.isPlaying());
       mus.setAttribute("aria-label", Music.isPlaying() ? "Tắt nhạc nền" : "Bật nhạc nền");
     };
-    mus.addEventListener("click", () => { const on = Music.toggle(); paint(); if (on) toast("Nhạc đêm khuya đã lên — đeo tai nghe để nghe trọn nhé"); });
+    mus.addEventListener("click", () => { const on = Music.toggle(); paint(); if (on) { const t = Music.current(); toast(t ? `Piano cổ điển: ${t.composer} — ${t.title}` : "Nhạc đêm khuya đã lên — đeo tai nghe để nghe trọn nhé"); } });
     paint();
   }
-  // Trình duyệt chặn autoplay — nếu user đã bật nhạc, phát lại sau cử chỉ đầu tiên
+  // Nhạc bật sẵn: thử phát ngay khi vào trang; trình duyệt chặn autoplay có tiếng thì
+  // nhạc lên ở lần chạm/click/phím đầu tiên bất kỳ đâu trên trang
   if (Music.isPlaying()) {
-    document.addEventListener("pointerdown", () => Music.resumeIfWanted(), { once: true });
-    document.addEventListener("keydown", () => Music.resumeIfWanted(), { once: true });
+    Music.resumeIfWanted();
+    const mus = document.getElementById("musicToggle");
+    const kick = e => { if (!(mus && mus.contains(e.target))) Music.resumeIfWanted(); ["pointerdown", "keydown", "touchstart"].forEach(n => document.removeEventListener(n, kick, true)); };
+    ["pointerdown", "keydown", "touchstart"].forEach(n => document.addEventListener(n, kick, true));
   }
   // Hamburger menu (mobile)
   const navBtn = document.getElementById("navToggle");
