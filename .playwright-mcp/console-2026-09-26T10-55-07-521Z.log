@@ -1,0 +1,5 @@
+[     673ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8321/public/js/cardart.js:0
+[     674ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8321/public/js/data.js:0
+[     674ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8321/public/js/shared.js:0
+[     676ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8321/public/js/esoteric.js:0
+[     687ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8321/public/js/app.js:0

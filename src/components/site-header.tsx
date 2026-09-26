@@ -10,6 +10,7 @@ const navItems = [
   ["Về mình", "/#ve-minh"],
   ["Cảm nhận khách hàng", "/#cam-nhan"],
   ["FAQ", "/#faq"],
+  ["Trò chơi ✦", "/game.html"],
 ];
 
 export function SiteHeader({ dark = true }: { dark?: boolean }) {

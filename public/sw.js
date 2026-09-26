@@ -1,11 +1,8 @@
 /* Service Worker — Tiệm Tarot Đêm Khuya
    Precache core files; runtime cache-first cho ảnh lá bài & font. */
-const CACHE = "tiem-tarot-v1";
+const CACHE = "tiem-tarot-v2";
 const CORE = [
-  "./",
-  "./index.html",
   "./game.html",
-  "./css/lumiere.css",
   "./manifest.webmanifest",
   "./css/style.css",
   "./js/shared.js",
@@ -63,6 +60,6 @@ self.addEventListener("fetch", e => {
         caches.open(CACHE).then(c => c.put(e.request, copy));
       }
       return res;
-    }).catch(() => caches.match(e.request).then(hit => hit || caches.match("./index.html")))
+    }).catch(() => caches.match(e.request).then(hit => hit || caches.match("./game.html")))
   );
 });
