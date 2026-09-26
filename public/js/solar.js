@@ -2,6 +2,7 @@
 
 makeStars();
 initSoundToggle();
+setTimeout(() => document.getElementById("owlSay").textContent || owlSay("Mỗi năm, Mặt Trời quay về đúng chỗ nó đứng khi bạn chào đời. Cho ta ngày sinh — ta xem năm tuổi mới của bạn mang màu gì."), 400);
 
 (function prefill() {
   const p = Profile.get();
@@ -12,7 +13,7 @@ initSoundToggle();
 document.getElementById("solarBtn").addEventListener("click", () => {
   const name = document.getElementById("nameInput").value.trim() || "Bạn";
   const dob = document.getElementById("dobInput").value;
-  if (!dob) { toast("Cho mình xin ngày sinh đã!"); return; }
+  if (!dob) { owlSay("Ta cần ngày sinh để biết khi nào Mặt Trời về nhà đấy!"); toast("Cho mình xin ngày sinh đã!"); return; }
 
   const [by, bm, bd] = dob.split("-").map(Number);
   Profile.set({ ...Profile.get(), name, dob });
@@ -85,6 +86,7 @@ document.getElementById("solarBtn").addEventListener("click", () => {
   const box = document.getElementById("solarResult");
   box.innerHTML = html;
   box.hidden = false;
+  owlSay(isToday ? `Chúc mừng sinh nhật! Năm cá nhân số <b>${py}</b> vừa mở cửa — lá chủ đề của bạn là <b>${card.vi}</b>.` : `Còn <b>${daysLeft}</b> ngày nữa là Mặt Trời về nhà. Năm này của bạn mang số <b>${py}</b>, lá chủ đề là <b>${card.vi}</b>.`);
   SFX.play(isToday ? "reveal" : "sparkle");
   burstAt(box.querySelector(".tarot-card"), 16);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });

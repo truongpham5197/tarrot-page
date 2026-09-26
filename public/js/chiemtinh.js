@@ -2,6 +2,7 @@
 
 makeStars();
 initSoundToggle();
+setTimeout(() => document.getElementById("owlSay").textContent || owlSay("Chào lữ khách! Cho ta xin ngày sinh — có giờ sinh thì càng tốt — ta sẽ dò xem Mặt Trời, Mặt Trăng và Cung Mọc của bạn đang đứng ở đâu trên bầu trời."), 400);
 
 const hourSel = document.getElementById("hourInput");
 for (let h = 0; h < 24; h++) {
@@ -67,7 +68,7 @@ document.getElementById("drawBtn").addEventListener("click", () => {
   const dob = document.getElementById("dobInput").value;
   const hour = parseInt(hourSel.value, 10);
 
-  if (!dob) { toast("Vũ trụ cần ngày sinh để vẽ bản đồ!"); return; }
+  if (!dob) { owlSay("Ơ kìa, thiếu ngày sinh thì ta biết dò sao ở chỗ nào bây giờ?"); toast("Vũ trụ cần ngày sinh để vẽ bản đồ!"); return; }
   const d = new Date(dob + "T12:00:00");
   const day = d.getDate(), month = d.getMonth() + 1;
 
@@ -124,6 +125,7 @@ document.getElementById("drawBtn").addEventListener("click", () => {
   const box = document.getElementById("astroResult");
   box.innerHTML = html;
   box.hidden = false;
+  owlSay(`${name === "Bạn" ? "" : esc(name) + " à, "}Mặt Trời của bạn ở <b>${sun.vi}</b>, Mặt Trăng ghé <b>${moon.vi}</b>${asc ? `, còn Cung Mọc là <b>${asc.vi}</b>` : ""}. Nguyên tố <b>${dom[0]}</b> đang dẫn dắt bạn đấy!`);
   SFX.play("reveal");
   burstAt(box.querySelector(".astro-wheel-wrap"), 18);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });

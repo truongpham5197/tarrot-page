@@ -216,7 +216,7 @@ function renderReading() {
 
   const shareEl = document.createElement("div");
   shareEl.className = "result-card";
-  shareEl.innerHTML = `<div class="owl">${ICON("owl")}</div>
+  shareEl.innerHTML = `<div class="owl">${OWL()}</div>
     <div><div class="result-pos">Cú Nguyệt dặn dò</div>
     <div class="meaning">${notes.join(" ")} Bài chỉ soi đường — người bước vẫn là bạn.</div>
     <div class="story-controls" style="justify-content:flex-start;margin-top:12px">

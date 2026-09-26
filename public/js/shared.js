@@ -473,6 +473,9 @@ const Narrator = {
     });
   }
 };
+// Cú Nguyệt nói ở khung dẫn chuyện #owlSay của trang (nếu có)
+function owlSay(text) { return Narrator.say(document.getElementById("owlSay"), text); }
+
 function greetingByHour(h = new Date().getHours()) {
   if (h < 4) return "Giờ này còn thức là có chuyện canh cánh rồi. Ngồi xuống đây, kể ta nghe.";
   if (h < 11) return "Trời sáng rồi mà bạn vẫn ghé tiệm đêm — chắc vũ trụ có lời muốn gửi sớm.";
@@ -577,35 +580,100 @@ function shuffleRitual(container, ms = 1300) {
   });
 }
 
-// ---- Mặt sau lá bài: medallion trăng-sao huyền bí (SVG) ----
+// ---- Mặt sau lá bài: mặt trời – trăng – sao, lá vàng trên nền chàm đêm (SVG) ----
 const CARD_BACK = (() => {
-  const dots = [];
-  for (let gy = 0; gy < 8; gy++) for (let gx = 0; gx < 6; gx++)
-    dots.push(`<circle cx="${23 + gx * 23}" cy="${30 + gy * 22}" r="1"/>`);
-  const star4 = (x, y, s) => `M${x} ${y - s} Q${x + s * .22} ${y - s * .22} ${x + s} ${y} Q${x + s * .22} ${y + s * .22} ${x} ${y + s} Q${x - s * .22} ${y + s * .22} ${x - s} ${y} Q${x - s * .22} ${y - s * .22} ${x} ${y - s}Z`;
-  const orbit = [0, 45, 90, 135, 180, 225, 270, 315].map(a => {
-    const r = a * Math.PI / 180;
-    return `<path d="${star4(80 + 32 * Math.cos(r), 106 + 32 * Math.sin(r), 3.6)}" fill="#d7a94a"/>`;
-  }).join("");
-  const corners = [[18, 18], [142, 18], [18, 194], [142, 194]]
-    .map(([x, y]) => `<path d="${star4(x, y, 4.4)}" fill="#f5e8d1" opacity=".8"/>`).join("");
+  const CX = 80, CY = 106, f = n => +n.toFixed(2);
+  const rnd = mulberry32(20260926);
+  const star4 = (x, y, s, k = .2) => `M${f(x)} ${f(y - s)}Q${f(x + s * k)} ${f(y - s * k)} ${f(x + s)} ${f(y)}Q${f(x + s * k)} ${f(y + s * k)} ${f(x)} ${f(y + s)}Q${f(x - s * k)} ${f(y + s * k)} ${f(x - s)} ${f(y)}Q${f(x - s * k)} ${f(y - s * k)} ${f(x)} ${f(y - s)}Z`;
+  const polar = (r, deg) => [CX + r * Math.cos(deg * Math.PI / 180), CY + r * Math.sin(deg * Math.PI / 180)];
+
+  // Tia mặt trời: 24 tia dài hình kim + 24 tia ngắn xen kẽ
+  let rays = "";
+  for (let i = 0; i < 48; i++) {
+    const d = i * 7.5 - 90;
+    if (i % 2 === 0) {
+      const [x1, y1] = polar(35, d - 2.2), [x2, y2] = polar(35, d + 2.2), [xt, yt] = polar(i % 4 === 0 ? 58 : 51, d);
+      rays += `<path d="M${f(x1)} ${f(y1)}L${f(xt)} ${f(yt)}L${f(x2)} ${f(y2)}Z"/>`;
+    } else {
+      const [x1, y1] = polar(35, d), [x2, y2] = polar(45, d);
+      rays += `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke="url(#cbGold)" stroke-width=".6" fill="none"/>`;
+    }
+  }
+  // Vạch chia độ trong vòng sáng
+  let ticks = "";
+  for (let i = 0; i < 72; i++) {
+    const [x1, y1] = polar(30.6, i * 5), [x2, y2] = polar(i % 6 === 0 ? 27.4 : 29, i * 5);
+    ticks += `M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`;
+  }
+  // Bụi sao rải ngoài huy chương
+  let dust = "";
+  for (let i = 0; i < 70; i++) {
+    const x = 16 + rnd() * 128, y = 18 + rnd() * 176;
+    if (Math.hypot(x - CX, y - CY) < 62) continue;
+    const r = rnd() < .12 ? .9 : .35 + rnd() * .35;
+    dust += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" opacity="${f(.35 + rnd() * .55)}"/>`;
+  }
+  const sparkles = [[30, 62, 3], [131, 150, 3], [128, 58, 2.2], [33, 152, 2.2], [52, 42, 1.6], [110, 172, 1.6]]
+    .map(([x, y, r]) => `<path d="${star4(x, y, r, .16)}"/>`).join("");
+
+  // Pha trăng: lưỡi liềm – bán nguyệt – tròn – bán nguyệt – lưỡi liềm
+  const phases = y => {
+    const r = 3.3, xs = [58, 69, 80, 91, 102];
+    const cres = (x, dir) => `<path d="M${x} ${y - r}A${r} ${r} 0 1 ${dir ? 1 : 0} ${x} ${y + r}A${r * .55} ${r} 0 1 ${dir ? 0 : 1} ${x} ${y - r}Z"/>`;
+    const half = (x, dir) => `<path d="M${x} ${y - r}A${r} ${r} 0 0 ${dir ? 1 : 0} ${x} ${y + r}Z"/><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="url(#cbGold)" stroke-width=".45"/>`;
+    return `<g fill="url(#cbGold)">${cres(xs[0], 0)}${half(xs[1], 0)}<circle cx="${xs[2]}" cy="${y}" r="${r + .4}"/>${half(xs[3], 1)}${cres(xs[4], 1)}</g>
+      <path d="M22 ${y}H51M109 ${y}H138" stroke="url(#cbGold)" stroke-width=".5" opacity=".7"/>
+      <path d="${star4(22, y, 2.2)}${star4(138, y, 2.2)}" fill="url(#cbGold)"/>`;
+  };
+
+  // Hoa văn góc (vẽ 1 góc rồi lật)
+  const corner = `<g fill="none" stroke="url(#cbGold)" stroke-width=".7">
+      <path d="M14 40V22Q14 14 22 14H40"/><path d="M18 34V24Q18 18 24 18H34" stroke-width=".45" opacity=".8"/>
+      <path d="M22 14Q24 22 14 22" stroke-width=".5"/><circle cx="40" cy="14" r="1.1" fill="url(#cbGold)" stroke="none"/><circle cx="14" cy="40" r="1.1" fill="url(#cbGold)" stroke="none"/>
+    </g><path d="${star4(23.5, 23.5, 4.2, .14)}" fill="url(#cbGold)"/>`;
+  const corners = [[1, 1, 0, 0], [-1, 1, 160, 0], [1, -1, 0, 212], [-1, -1, 160, 212]]
+    .map(([sx, sy, tx, ty]) => `<g transform="translate(${tx} ${ty}) scale(${sx} ${sy})">${corner}</g>`).join("");
+
+  const ishtar = `<path d="${star4(CX + 6, CY - 3, 9, .13)}"/><path d="${star4(CX + 6, CY - 3, 5.6, .13)}" transform="rotate(45 ${CX + 6} ${CY - 3})"/>`;
+
   return `<svg class="back-svg" viewBox="0 0 160 212" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs><radialGradient id="cbg" cx="50%" cy="42%" r="75%">
-      <stop offset="0%" stop-color="#11616f"/><stop offset="55%" stop-color="#0a404e"/><stop offset="100%" stop-color="#052531"/>
-    </radialGradient></defs>
-    <rect width="160" height="212" fill="url(#cbg)"/>
-    <g fill="#f5e8d1" opacity=".1">${dots.join("")}</g>
-    <rect x="7" y="7" width="146" height="198" rx="9" fill="none" stroke="#f5e8d1" stroke-opacity=".5" stroke-width="1.1"/>
-    <rect x="12.5" y="12.5" width="135" height="187" rx="6" fill="none" stroke="#d7a94a" stroke-opacity=".7" stroke-width=".8"/>
+    <defs>
+      <radialGradient id="cbBg" cx="50%" cy="48%" r="72%">
+        <stop offset="0" stop-color="#2a1d5c"/><stop offset=".5" stop-color="#140e33"/><stop offset="1" stop-color="#06040f"/>
+      </radialGradient>
+      <linearGradient id="cbGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#8a6420"/><stop offset=".22" stop-color="#f7e3a1"/><stop offset=".42" stop-color="#b8862f"/>
+        <stop offset=".6" stop-color="#fff4c8"/><stop offset=".8" stop-color="#9c7426"/><stop offset="1" stop-color="#e9c874"/>
+      </linearGradient>
+      <radialGradient id="cbHalo" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#f7d98a" stop-opacity=".28"/><stop offset=".55" stop-color="#b98cff" stop-opacity=".08"/><stop offset="1" stop-color="#b98cff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="cbDisc" cx="42%" cy="38%" r="70%">
+        <stop offset="0" stop-color="#231a4d"/><stop offset="1" stop-color="#07051a"/>
+      </radialGradient>
+      <pattern id="cbLat" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <path d="M0 0H9M0 0V9" stroke="#e9c874" stroke-width=".35" opacity=".09"/>
+      </pattern>
+    </defs>
+    <rect width="160" height="212" fill="url(#cbBg)"/>
+    <rect x="10" y="10" width="140" height="192" fill="url(#cbLat)"/>
+    <g fill="#fff4c8">${dust}</g>
+    <g fill="url(#cbGold)" opacity=".85">${sparkles}</g>
+    <rect x="4.5" y="4.5" width="151" height="203" rx="8" fill="none" stroke="url(#cbGold)" stroke-width="1.6"/>
+    <rect x="8" y="8" width="144" height="196" rx="5.5" fill="none" stroke="url(#cbGold)" stroke-width=".5" opacity=".75"/>
+    <path d="M14 40V172M146 40V172M40 14H120M40 198H120" stroke="url(#cbGold)" stroke-width=".7" fill="none"/>
     ${corners}
-    <path d="M80 22l4 6-4 6-4-6Z" fill="#d7a94a"/><path d="M64 28h10M86 28h10" stroke="#f5e8d1" stroke-opacity=".55" stroke-width="1"/>
-    <path d="M80 178l4 6-4 6-4-6Z" fill="#d7a94a"/><path d="M64 184h10M86 184h10" stroke="#f5e8d1" stroke-opacity=".55" stroke-width="1"/>
-    <circle cx="80" cy="106" r="37" fill="none" stroke="#d7a94a" stroke-opacity=".85" stroke-width="1.3"/>
-    <circle cx="80" cy="106" r="29.5" fill="none" stroke="#f5e8d1" stroke-opacity=".5" stroke-width=".8"/>
-    ${orbit}
-    <path d="M80 84 A22 22 0 1 0 80 128 A17 17 0 1 1 80 84Z" fill="#d7a94a"/>
-    <path d="${star4(97, 95, 4.6)}" fill="#f5e8d1"/>
-    <circle cx="80" cy="106" r="1.8" fill="#f5e8d1" opacity=".85"/>
+    <path d="M14 99l2.4 7-2.4 7-2.4-7ZM146 99l2.4 7-2.4 7-2.4-7Z" fill="url(#cbGold)"/>
+    ${phases(30)}${phases(182)}
+    <circle cx="${CX}" cy="${CY}" r="64" fill="url(#cbHalo)"/>
+    <g fill="url(#cbGold)">${rays}</g>
+    <circle cx="${CX}" cy="${CY}" r="34" fill="url(#cbDisc)" stroke="url(#cbGold)" stroke-width="1.4"/>
+    <circle cx="${CX}" cy="${CY}" r="31.2" fill="none" stroke="url(#cbGold)" stroke-width=".45"/>
+    <path d="${ticks}" stroke="url(#cbGold)" stroke-width=".4" opacity=".8"/>
+    <circle cx="${CX}" cy="${CY}" r="25.5" fill="none" stroke="url(#cbGold)" stroke-width=".35" stroke-dasharray=".8 2" opacity=".7"/>
+    <path d="M${CX - 1} ${CY - 21}A21 21 0 0 0 ${CX - 1} ${CY + 21}A12 21 0 0 1 ${CX - 1} ${CY - 21}Z" fill="url(#cbGold)"/>
+    <g fill="url(#cbGold)">${ishtar}</g>
+    <circle cx="${CX + 6}" cy="${CY - 3}" r="1.3" fill="#fff4c8"/>
   </svg>`;
 })();
 

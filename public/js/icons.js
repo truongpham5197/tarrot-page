@@ -81,10 +81,18 @@ function ASTROLABE() {
 }
 
 // Tự thay mọi <… data-icon="tên"> bằng SVG tương ứng
+// Gốc thư mục public/ — suy ra từ chính file icons.js để chạy đúng cả ở /games/
+const ASSET_BASE = new URL("../", document.currentScript ? document.currentScript.src : location.href).href;
+// Chân dung Cú Nguyệt — ảnh thật (Eagle Owl Portrait, CC0, Joselodos / Wikimedia Commons)
+function OWL() {
+  return `<img class="owl-img" src="${ASSET_BASE}img/cu-nguyet-192.webp" srcset="${ASSET_BASE}img/cu-nguyet-192.webp 1x, ${ASSET_BASE}img/cu-nguyet-384.webp 2x" alt="Cú Nguyệt" width="96" height="96" draggable="false">`;
+}
+
 function paintIcons(root = document) {
   root.querySelectorAll("[data-icon]").forEach(el => {
     el.innerHTML = ICON(el.dataset.icon, el.dataset.iconClass || "");
   });
+  root.querySelectorAll("[data-owl]").forEach(el => { el.innerHTML = OWL(); });
   root.querySelectorAll("[data-astrolabe]").forEach(el => { el.innerHTML = ASTROLABE(); });
 }
 paintIcons();

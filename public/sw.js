@@ -1,12 +1,14 @@
 /* Service Worker — Tiệm Tarot Đêm Khuya
    Precache core files; runtime cache-first cho ảnh lá bài & font. */
-const CACHE = "tiem-tarot-v3";
+const CACHE = "tiem-tarot-v4";
 const CORE = [
   "./game.html",
   "./manifest.webmanifest",
   "./css/style.css",
   "./css/mystic.css",
   "./js/icons.js",
+  "./img/cu-nguyet-192.webp",
+  "./img/cu-nguyet-384.webp",
   "./js/shared.js",
   "./js/data.js",
   "./js/esoteric.js",

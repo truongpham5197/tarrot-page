@@ -2,6 +2,7 @@
 
 makeStars();
 initSoundToggle();
+setTimeout(() => document.getElementById("owlSay").textContent || owlSay("Mỗi chữ cái trong tên bạn đều mang một con số. Nhập họ tên đầy đủ và ngày sinh — ta sẽ gỡ từng lớp mật mã một."), 400);
 
 (function prefill() {
   const p = Profile.get();
@@ -53,8 +54,8 @@ function numCard(icon, label, desc, num, chain, extra = "") {
 document.getElementById("decodeBtn").addEventListener("click", () => {
   const name = document.getElementById("nameInput").value.trim();
   const dob = document.getElementById("dobInput").value;
-  if (!dob) { toast("Cho mình xin ngày sinh đã!"); return; }
-  if (!name) { toast("Cần họ tên để đọc số Linh hồn & Biểu đạt!"); return; }
+  if (!dob) { owlSay("Thiếu ngày sinh rồi — con số Đường Đời giấu ở đó cả đấy!"); toast("Cho mình xin ngày sinh đã!"); return; }
+  if (!name) { owlSay("Cho ta xin họ tên đầy đủ nhé — gõ không dấu cũng được."); toast("Cần họ tên để đọc số Linh hồn & Biểu đạt!"); return; }
 
   const [y, m, d] = dob.split("-").map(Number);
   Profile.set({ ...Profile.get(), name, dob });
@@ -95,6 +96,7 @@ document.getElementById("decodeBtn").addEventListener("click", () => {
   const box = document.getElementById("numResult");
   box.innerHTML = html;
   box.hidden = false;
+  owlSay(`Con số Đường Đời của bạn là <b>${lifepath.final}</b> — “${NUM_MEANINGS[lifepath.final].name}”. Năm nay bạn đang đi trong năng lượng số <b>${personalYear.final}</b>.`);
   SFX.play("reveal");
   burstAt(box.querySelector(".num-grid"), 18);
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
