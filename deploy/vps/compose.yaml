@@ -1,0 +1,38 @@
+name: sarahreader
+services:
+  web:
+    image: ${SARAH_IMAGE:-sarahreader:latest}
+    container_name: sarahreader-web
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+      NODE_OPTIONS: --max-old-space-size=384
+    expose:
+      - "3000"
+    networks:
+      - web
+    mem_limit: 512m
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/api/booking-slots').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+networks:
+  web:
+    external: true
+    name: infra_internal

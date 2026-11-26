@@ -1,0 +1,11 @@
+# Tasks
+- [x] T001 Remove campaign and update navigation/FAQs.
+- [x] T002 Add failing backend tests for reservations, proposals, validation and authentication.
+- [x] T003 Implement SQL persistence and appointment transitions.
+- [x] T004 Implement first-admin setup, password login, session checks and logout.
+- [x] T005 Implement public and protected APIs.
+- [x] T006 Implement customer calendar, free hours, alternative-time proposals and receipt.
+- [x] T007 Implement admin dashboard, detail editor, availability controls and new-request notification.
+- [x] T008 Verify complete browser journeys, concurrency, access control, persistence, responsive layout, lint/typecheck/build.
+- [x] T009 Document setup and deployment requirements; record verification.
+- [x] T010 Harden owner provisioning: remove localhost exception, require a private 32+ character setup token everywhere, remove public signup invitation, and verify unauthorized setup is rejected.
