@@ -190,10 +190,13 @@ try {
       }),
     /trùng|được giữ|không còn/,
   );
-  await assert.rejects(
-    () => createSlots(future, ["11:30"]),
-    /giờ|không hợp lệ/,
-  );
+  // Start times sit on a 30-minute grid from 08:00 to 21:00; anything else is rejected.
+  for (const invalid of ["11:15", "07:30", "21:30", "11:45"])
+    await assert.rejects(
+      () => createSlots(future, [invalid]),
+      /giờ|không hợp lệ/,
+      `start time ${invalid} must be rejected`,
+    );
   await closeSlot(slots.find((slot) => slot.time === "09:00")!.id);
   assert.equal((await getAvailableSlots()).length, 1);
   await assert.rejects(() => createAdmin("admin@example.com", "short"));
