@@ -1,0 +1,7 @@
+# Research and decisions
+- Followed installed Next.js 16.3.5 route-handler, async cookies and authentication documentation. Protect data inside each API handler rather than relying only on a page redirect.
+- Chose @libsql/client for local SQLite and durable remote libSQL/Turso with the same parameterized SQL schema. No ephemeral-file fallback on Vercel. Reference: https://github.com/tursodatabase/turso-docs/blob/main/sdk/ts/reference.mdx.
+- One owner account: scrypt password hashing, opaque random session tokens stored as SHA-256 digests, 12-hour expiry, HttpOnly/SameSite=Strict cookies and server revocation. First setup closes atomically when account ID 1 exists. Every environment requires a private operator token of at least 32 characters; localhost does not bypass provisioning authorization. Login has no public registration link.
+- Published slots reserve atomically while proposals do not reserve until accepted. Fixed 60-minute, hourly slots from 08:00–21:00 simplify conflict semantics; all display/validation uses Vietnam time.
+- In-app notification uses request-count badges, new-ID detection on data refresh and a 30-second visible-tab poll. No external mail/SMS service or account needed.
+- Existing root-scoped service worker used to cache arbitrary same-origin GETs. Added a private-route bypass, no-store handling and cache-version change so scheduling/admin data cannot enter offline cache.

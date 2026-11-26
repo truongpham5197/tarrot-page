@@ -1,0 +1,289 @@
+/* Sarah Reader: shared visual layer for the original reading tools. */
+@font-face {
+  font-family: "Sarah Cormorant";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Sarah Cormorant";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/cormorant-garamond-vietnamese-500-normal.woff2")
+    format("woff2");
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1,
+    U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329,
+    U+1EA0-1EF9, U+20AB;
+}
+:root {
+  --bg: #f5faff;
+  --bg-2: #eaf3fa;
+  --gold: #487b9d;
+  --gold-2: #315f7d;
+  --purple: #5c8bab;
+  --text: #315f7d;
+  --muted: #627f93;
+  --gold-line: #b5cddd;
+  --ink: #edf5fb;
+  --serif: "Sarah Cormorant", "Cormorant Garamond", Georgia, serif;
+}
+html {
+  background: var(--bg);
+  scroll-padding-top: 90px;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+::selection {
+  background: #c5deef;
+  color: #254e6b;
+}
+:focus-visible {
+  outline: 2px solid #457b9d !important;
+  outline-offset: 4px;
+}
+.nebula {
+  background:
+    radial-gradient(ellipse at 10% 10%, #e0effb99, transparent 65%),
+    radial-gradient(ellipse at 90% 80%, #d5e8f7aa, transparent 60%), #f5faff;
+}
+.stars span {
+  background: #7ba4c2;
+}
+.sky-canvas {
+  opacity: 0.15;
+}
+.site-header {
+  background: #f5faffed;
+  border-color: #c8dce9;
+  backdrop-filter: blur(15px);
+}
+.site-header nav a {
+  color: #52758f;
+}
+.site-header nav a:hover {
+  color: #244e6e;
+}
+.site-header nav.open {
+  background: #f5faff;
+}
+.logo {
+  color: #315f7d;
+}
+.logo .ico {
+  filter: none;
+}
+.hero {
+  background:
+    linear-gradient(90deg, #edf7fdea, #edf7fdc9),
+    url("/img/sarah-seaside.webp") center 58% / cover;
+}
+.hero h1 {
+  font-weight: 500;
+  text-shadow: none;
+  color: #315f7d;
+}
+.hero h1 em {
+  background: none;
+  color: #4c7f9f;
+  -webkit-text-fill-color: initial;
+}
+.hero-kicker {
+  color: #5c87a5;
+}
+.disclaimer,
+.site-footer .tiny {
+  color: #70899d;
+}
+.section-title {
+  font-weight: 500;
+}
+.section-title::after {
+  opacity: 0.65;
+}
+.btn-gold {
+  background: #487b9d;
+  color: white;
+  box-shadow: none;
+}
+.btn-gold:hover {
+  box-shadow: 0 7px 20px #497b9a22;
+}
+.btn-ghost {
+  border-color: #91afc4;
+  color: #315f7d;
+}
+.btn-ghost:hover {
+  background: #dfedf8;
+}
+.btn-gold .ico {
+  color: white;
+}
+.game-card,
+.form-card,
+.result-card,
+.big3-card,
+.num-card,
+.m-detail-card,
+.verdict-card,
+.journal,
+.horo-result,
+.final-concl {
+  background: #ffffffbf;
+  border-color: #c9deeb;
+  box-shadow: 0 7px 22px #557d9708;
+}
+.game-card:hover {
+  background: #edf6fd;
+  border-color: #88aec8;
+  box-shadow: 0 8px 20px #6f99b415;
+}
+.guide,
+.story-plot,
+.read-focus,
+.read-long p:last-child {
+  background: #e8f3fa80;
+  border-color: #a3c2d9;
+}
+.zodiac-btn {
+  background: #fff8;
+  border-color: #c4dbe9;
+}
+.zodiac-btn:hover,
+.zodiac-btn.active {
+  background: #deedf8;
+  border-color: #7ba4c1;
+}
+.form-row input,
+.form-row select,
+.yesno-controls input,
+.question-box textarea {
+  background: #ffffffd9;
+  color: #315f7d;
+  border-color: #b9d1e2;
+}
+.form-row input::placeholder,
+.yesno-controls input::placeholder,
+.question-box textarea::placeholder {
+  color: #728ea1;
+}
+.form-row select option {
+  background: #f5faff;
+  color: #315f7d;
+}
+.toast,
+.owl-bubble,
+.bubble {
+  background: #f5fafff5;
+  color: #315f7d;
+  border-color: #abc8dd;
+  box-shadow: 0 5px 24px #436b8a20;
+}
+.bubble::before {
+  background: #f5faff;
+  border-color: #abc8dd;
+}
+.astrolabe .al-inner {
+  stroke: #85abc6;
+}
+.question-box input {
+  background: #ffffffd9;
+  color: #315f7d;
+  border-color: #b9d1e2;
+}
+.owl-portrait {
+  background: #dcecf8;
+  border-color: #aec9df;
+}
+.owl-aura {
+  opacity: 0.2;
+}
+.home-fab {
+  background: #b8d7ee;
+  box-shadow: 0 8px 24px #638ba832;
+}
+.home-fab .ico {
+  color: #315f7d;
+}
+.num-badge,
+.num-card.master .num-badge {
+  background: #b9d9ed;
+  color: #315f7d;
+}
+.m-circle {
+  fill: #e6f2fa;
+  stroke: #6894b2;
+}
+.m-circle.active {
+  fill: #c6deef;
+}
+.m-node:focus .m-circle,
+.m-node:hover .m-circle {
+  stroke: #315f7d;
+}
+.m-num {
+  fill: #315f7d;
+}
+.wheel-marker.moon {
+  fill: #527e9f;
+}
+.wheel-ring {
+  stroke: #7fa5bf;
+}
+.wheel-spoke,
+.wheel-ring.thin,
+.m-line {
+  stroke: #b3cddf;
+}
+.verdict.yes {
+  color: #39775f;
+}
+.verdict.no {
+  color: #ad5361;
+}
+.card-back {
+  background: linear-gradient(150deg, #7fa9c8, #3e7398);
+  border-color: #d7e9f8;
+}
+.sound-toggle,
+.nav-toggle {
+  border-color: #a7c3d8;
+  color: #487b9d;
+}
+.site-footer {
+  border-color: #c5dbe9;
+}
+.moon-chip,
+.chip {
+  border-color: #c3d9e9;
+  background: #e7f2fa;
+  color: #4d7591;
+}
+@media (max-width: 800px) {
+  .site-header nav {
+    background: #f5fafff7;
+  }
+  .site-header nav a:hover {
+    background: #e4f0fa;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,13 @@
+# Append this site to the existing VPS Caddyfile; validate before reloading.
+sarahreader.com {
+    encode zstd gzip
+    header X-Content-Type-Options nosniff
+    header Referrer-Policy strict-origin-when-cross-origin
+    @private path /admin* /api/* /booking*
+    header @private Cache-Control "private, no-store"
+    reverse_proxy sarahreader-web:3000
+}
+
+www.sarahreader.com {
+    redir https://sarahreader.com{uri} permanent
+}
